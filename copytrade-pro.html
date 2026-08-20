@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CopyTrade Pro - Investment Broker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --neon-green: #00FF88;
+            --bg-black: #000000;
+            --card-bg: #0a0a0a;
+            --border-color: #1a1a1a;
+        }
+        body {
+            background-color: var(--bg-black);
+            color: #ffffff;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .neon-text {
+            color: var(--neon-green);
+        }
+        .neon-border {
+            border-color: var(--neon-green);
+        }
+        .neon-bg {
+            background-color: var(--neon-green);
+            color: #000000;
+        }
+        .neon-hover:hover {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-color: var(--neon-green);
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        .input-field {
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            width: 100%;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--neon-green);
+        }
+        .btn-primary {
+            background-color: var(--neon-green);
+            color: black;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--neon-green);
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        th {
+            color: #888;
+            font-weight: 500;
+        }
+        .positive { color: var(--neon-green); }
+        .negative { color: #ff4444; }
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="border-b border-[#1a1a1a] py-4">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+                <div class="flex items-center space-x-8">
+                    <button onclick="showPage('landing')" class="nav-link">Home</button>
+                    <button onclick="showPage('dashboard')" class="nav-link">Dashboard</button>
+                    <button onclick="showPage('strategies')" class="nav-link">Strategies</button>
+                    <button onclick="showPage('transactions')" class="nav-link">Transactions</button>
+                    <button onclick="showPage('admin')" class="nav-link">Admin</button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userBalance" class="neon-text font-bold">$0.00</span>
+                    <button onclick="showPage('login')" id="authBtn" class="btn-outline">Login</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container mx-auto px-4 py-8">
+            <div id="landing" class="page active">
+                <section class="text-center py-20">
+                    <h1 class="text-5xl font-bold mb-4">Copy Top Traders. <span class="neon-text">Automatically.</span></h1>
+                    <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">We support Copy Trading with excellent results. Start earning while you sleep.</p>
+                    <button onclick="showPage('signup')" class="btn-primary text-lg px-8 py-4">Start Copy Trading Now</button>
+                </section>
+
+                <section class="py-16">
+                    <h2 class="text-3xl font-bold mb-8">Live Performance</h2>
+                    <div class="card overflow-hidden">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Asset</th>
+                                    <th>Result</th>
+                                    <th>Return %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="performanceTable">
+                            </tbody>
+                        </table>
+                        <div class="p-4 text-sm text-gray-500">Data synced directly from our spreadsheet</div>
+                    </div>
+                </section>
+
+                <section class="py-16">
+                    <h2 class="text-3xl font-bold mb-12 text-center">How It Works</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="card p-8 text-center">
+                            <div class="text-4xl mb-4">📊</div>
+                            <h3 class="text-xl font-bold mb-2">Choose Strategy</h3>
+                            <p class="text-gray-400">Browse top-performing traders with proven track records</p>
+                        </div>
+                        <div class="card p-8 text-center">
+                            <div class="text-4xl mb-4">🔄</div>
+                            <h3 class="text-xl font-bold mb-2">Set Amount</h3>
+                            <p class="text-gray-400">Decide how much to invest and your risk level</p>
+                        </div>
+                        <div class="card p-8 text-center">
+                            <div class="text-4xl mb-4">💰</div>
+                            <h3 class="text-xl font-bold mb-2">Earn Automatically</h3>
+                            <p class="text-gray-400">Trades execute automatically. Watch your portfolio grow.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="border-t border-[#1a1a1a] pt-8 mt-16 text-center text-gray-500 text-sm">
+                    <p>Risk Disclaimer: Trading involves substantial risk of loss and is not suitable for every investor. Past performance does not guarantee future results.</p>
+                </footer>
+            </div>
+
+            <div id="login" class="page">
+                <div class="max-w-md mx-auto card p-8">
+                    <h2 class="text-2xl font-bold mb-6">Login</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Email</label>
+                            <input type="email" class="input-field" required>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm text-gray-400 mb-2">Password</label>
+                            <input type="password" class="input-field" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Login</button>
+                    </form>
+                    <p class="mt-4 text-center text-gray-400">
+                        Don't have an account? <button onclick="showPage('signup')" class="neon-text">Sign up</button>
+                    </p>
+                </div>
+            </div>
+
+            <div id="signup" class="page">
+                <div class="max-w-md mx-auto card p-8">
+                    <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+                    <form onsubmit="handleSignup(event)">
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Email</label>
+                            <input type="email" class="input-field" required>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm text-gray-400 mb-2">Password</label>
+                            <input type="password" class="input-field" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Create Account</button>
+                    </form>
+                    <p class="mt-4 text-center text-gray-400">
+                        Already have an account? <button onclick="showPage('login')" class="neon-text">Login</button>
+                    </p>
+                </div>
+            </div>
+
+            <div id="dashboard" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold">Dashboard</h2>
+                        <button onclick="showPage('transactions')" class="btn-primary">Deposit</button>
+                    </div>
+                    <div class="card p-6 mb-6 neon-border border-l-4">
+                        <p class="text-yellow-500">⚠️ Complete KYC to enable withdrawals</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="card p-6">
+                            <h3 class="text-gray-400 mb-2">Total Balance</h3>
+                            <p class="text-3xl font-bold neon-text" id="dashBalance">$0.00</p>
+                        </div>
+                        <div class="card p-6">
+                            <h3 class="text-gray-400 mb-2">Active Copies</h3>
+                            <p class="text-3xl font-bold" id="activeCopies">0</p>
+                        </div>
+                        <div class="card p-6">
+                            <h3 class="text-gray-400 mb-2">Total P&L</h3>
+                            <p class="text-3xl font-bold positive" id="totalPnl">+$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4">Top Strategies</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="strategyCards">
+                </div>
+            </div>
+
+            <div id="strategies" class="page">
+                <h2 class="text-2xl font-bold mb-8">All Strategies</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="allStrategies">
+                </div>
+            </div>
+
+            <div id="strategy-detail" class="page">
+                <button onclick="showPage('strategies')" class="mb-4 text-gray-400 hover:text-white">← Back to Strategies</button>
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="mb-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 class="text-3xl font-bold" id="detailName">Strategy Name</h2>
+                                    <span class="text-sm bg-green-900 text-green-400 px-2 py-1 rounded">Low Risk</span>
+                                </div>
+                                <button class="btn-primary">Copy This Strategy</button>
+                            </div>
+                            <div class="grid grid-cols-4 gap-4 mb-8">
+                                <div class="card p-4 text-center">
+                                    <p class="text-gray-400 text-sm">30D Return</p>
+                                    <p class="text-xl font-bold positive" id="detailReturn">+0%</p>
+                                </div>
+                                <div class="card p-4 text-center">
+                                    <p class="text-gray-400 text-sm">Win Rate</p>
+                                    <p class="text-xl font-bold" id="detailWinRate">0%</p>
+                                </div>
+                                <div class="card p-4 text-center">
+                                    <p class="text-gray-400 text-sm">Max DD</p>
+                                    <p class="text-xl font-bold negative" id="detailDD">-0%</p>
+                                </div>
+                                <div class="card p-4 text-center">
+                                    <p class="text-gray-400 text-sm">Total P&L</p>
+                                    <p class="text-xl font-bold positive" id="detailPnl">+$0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mb-8">
+                            <h3 class="text-lg font-bold mb-4">Equity Curve</h3>
+                            <div id="equityChart" class="chart-container"></div>
+                        </div>
+
+                        <div class="card overflow-hidden">
+                            <h3 class="text-lg font-bold mb-4 p-6 pb-0">Live Trades Log</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Asset</th>
+                                        <th>Type</th>
+                                        <th>Entry</th>
+                                        <th>Exit</th>
+                                        <th>Result</th>
+                                        <th>%</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tradesTable">
+                                </tbody>
+                            </table>
+                            <div class="p-4 text-sm text-gray-500">Last updated 2 min ago</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card p-6 sticky top-4">
+                            <h3 class="text-lg font-bold mb-4">About Strategy</h3>
+                            <p class="text-gray-400 mb-6">Professional algorithmic trading strategy focused on major forex pairs with strict risk management.</p>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm text-gray-400 mb-2">Minimum to Copy</p>
+                                <p class="text-xl font-bold">$50</p>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-sm text-gray-400 mb-2">Copy Amount ($)</label>
+                                <input type="number" class="input-field" value="100" min="50">
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-sm text-gray-400 mb-2">Risk Multiplier</label>
+                                <input type="range" min="0.5" max="3" step="0.5" value="1" class="w-full">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>0.5x</span>
+                                    <span>1x</span>
+                                    <span>3x</span>
+                                </div>
+                            </div>
+
+                            <button class="btn-primary w-full">Start Copying</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="transactions" class="page">
+                <h2 class="text-2xl font-bold mb-8">Transactions</h2>
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold mb-4">Deposit Funds</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Amount ($)</label>
+                            <input type="number" class="input-field" placeholder="100" min="10">
+                        </div>
+                        <button class="btn-primary w-full">Pay with Paystack</button>
+                        <p class="text-xs text-gray-500 mt-4">Deposits are credited instantly via webhook</p>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold mb-4">Withdraw Funds</h3>
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Amount ($)</label>
+                            <input type="number" class="input-field" placeholder="100" min="10">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Bank Account</label>
+                            <input type="text" class="input-field" placeholder="Account number">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-400 mb-2">Bank Name</label>
+                            <input type="text" class="input-field" placeholder="Bank name">
+                        </div>
+                        <button class="btn-outline w-full" onclick="alert('Please complete KYC verification first')">Request Withdrawal</button>
+                        <p class="text-xs text-yellow-500 mt-4">⚠️ KYC verification required for withdrawals</p>
+                    </div>
+                </div>
+
+                <div class="card overflow-hidden">
+                    <h3 class="text-lg font-bold mb-4 p-6 pb-0">Transaction History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionHistory">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="admin" class="page">
+                <h2 class="text-2xl font-bold mb-8">Admin Panel</h2>
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div class="card p-6">
+                        <h3 class="text-gray-400 mb-2">Total Users</h3>
+                        <p class="text-3xl font-bold">1,247</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-gray-400 mb-2">Total Deposits</h3>
+                        <p class="text-3xl font-bold positive">$847,293</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-gray-400 mb-2">Pending Withdrawals</h3>
+                        <p class="text-3xl font-bold text-yellow-500">23</p>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-gray-400 mb-2">Active Copies</h3>
+                        <p class="text-3xl font-bold">892</p>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="card overflow-hidden">
+                        <h3 class="text-lg font-bold mb-4 p-6 pb-0">User Management</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Balance</th>
+                                    <th>KYC</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>user@example.com</td>
+                                    <td>$1,250</td>
+                                    <td><span class="text-yellow-500">Pending</span></td>
+                                    <td>
+                                        <button class="text-green-500 mr-2">✓</button>
+                                        <button class="text-red-500 mr-2">✗</button>
+                                        <button class="text-blue-500">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>trader@demo.com</td>
+                                    <td>$5,430</td>
+                                    <td><span class="neon-text">Approved</span></td>
+                                    <td>
+                                        <button class="text-green-500 mr-2">✓</button>
+                                        <button class="text-red-500 mr-2">✗</button>
+                                        <button class="text-blue-500">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <h3 class="text-lg font-bold mb-4 p-6 pb-0">Pending Withdrawals</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Bank</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>john@example.com</td>
+                                    <td>$500</td>
+                                    <td>Chase ****1234</td>
+                                    <td>
+                                        <button class="text-green-500 mr-2">Approve</button>
+                                        <button class="text-red-500">Reject</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>sarah@demo.com</td>
+                                    <td>$1,200</td>
+                                    <td>BoA ****5678</td>
+                                    <td>
+                                        <button class="text-green-500 mr-2">Approve</button>
+                                        <button class="text-red-500">Reject</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card p-6 mt-8">
+                    <h3 class="text-lg font-bold mb-4">Google Sheets Sync</h3>
+                    <div class="flex gap-4 items-center">
+                        <input type="text" class="input-field flex-1" placeholder="Google Sheets URL" value="https://docs.google.com/spreadsheets/d/1abc123...">
+                        <button class="btn-primary">Sync Now</button>
+                        <button class="btn-outline">Save Settings</button>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Auto-sync runs every 30 minutes</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentBalance = 0;
+
+        const strategies = [
+            { id: 1, name: "Alpha Forex Pro", return30d: 24.5, winRate: 78, copiers: 342, risk: "Low", pnl: 15420 },
+            { id: 2, name: "Crypto Momentum", return30d: 45.2, winRate: 65, copiers: 189, risk: "High", pnl: 28750 },
+            { id: 3, name: "Stable Growth", return30d: 12.8, winRate: 85, copiers: 567, risk: "Low", pnl: 9340 },
+            { id: 4, name: "Gold Scalper", return30d: 18.9, winRate: 72, copiers: 234, risk: "Medium", pnl: 12680 },
+            { id: 5, name: "Tech Stocks AI", return30d: 32.1, winRate: 69, copiers: 445, risk: "Medium", pnl: 21500 },
+            { id: 6, name: "Conservative Bond", return30d: 8.4, winRate: 92, copiers: 789, risk: "Low", pnl: 6750 }
+        ];
+
+        const performanceData = [
+            { date: "2024-01-15", asset: "EUR/USD", result: "Win", return: 2.4 },
+            { date: "2024-01-15", asset: "GBP/USD", result: "Win", return: 1.8 },
+            { date: "2024-01-14", asset: "USD/JPY", result: "Loss", return: -1.2 },
+            { date: "2024-01-14", asset: "XAU/USD", result: "Win", return: 3.1 },
+            { date: "2024-01-13", asset: "BTC/USD", result: "Win", return: 4.5 },
+            { date: "2024-01-13", asset: "ETH/USD", result: "Win", return: 2.9 },
+            { date: "2024-01-12", asset: "AAPL", result: "Loss", return: -0.8 },
+            { date: "2024-01-12", asset: "TSLA", result: "Win", return: 3.7 }
+        ];
+
+        const tradesData = [
+            { date: "2024-01-15 14:30", asset: "EUR/USD", type: "BUY", entry: 1.0850, exit: 1.0875, result: "Win", pct: 2.4 },
+            { date: "2024-01-15 12:15", asset: "GBP/USD", type: "SELL", entry: 1.2650, exit: 1.2625, result: "Win", pct: 1.8 },
+            { date: "2024-01-15 09:45", asset: "USD/JPY", type: "BUY", entry: 148.50, exit: 148.32, result: "Loss", pct: -1.2 },
+            { date: "2024-01-14 16:20", asset: "XAU/USD", type: "BUY", entry: 2025.40, exit: 2031.80, result: "Win", pct: 3.1 },
+            { date: "2024-01-14 11:30", asset: "BTC/USD", type: "BUY", entry: 42500, exit: 44412, result: "Win", pct: 4.5 }
+        ];
+
+        const transactionHistory = [
+            { date: "2024-01-15", type: "Deposit", amount: 500, status: "Completed", details: "Paystack" },
+            { date: "2024-01-14", type: "Deposit", amount: 1000, status: "Completed", details: "Paystack" },
+            { date: "2024-01-13", type: "Withdrawal", amount: 200, status: "Processing", details: "Chase Bank" },
+            { date: "2024-01-12", type: "Profit", amount: 150, status: "Completed", details: "Strategy Copy" }
+        ];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'strategy-detail') {
+                renderStrategyDetail();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            currentUser = { email: e.target[0].value, kyc: false };
+            currentBalance = 2500;
+            updateUI();
+            showPage('dashboard');
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            currentUser = { email: e.target[0].value, kyc: false };
+            currentBalance = 0;
+            updateUI();
+            showPage('dashboard');
+        }
+
+        function updateUI() {
+            if (currentUser) {
+                document.getElementById('authBtn').textContent = 'Logout';
+                document.getElementById('authBtn').onclick = () => {
+                    currentUser = null;
+                    currentBalance = 0;
+                    updateUI();
+                    showPage('landing');
+                };
+                document.getElementById('userBalance').textContent = `$${currentBalance.toLocaleString()}`;
+                document.getElementById('dashBalance').textContent = `$${currentBalance.toLocaleString()}`;
+            } else {
+                document.getElementById('authBtn').textContent = 'Login';
+                document.getElementById('authBtn').onclick = () => showPage('login');
+                document.getElementById('userBalance').textContent = '$0.00';
+            }
+        }
+
+        function renderPerformanceTable() {
+            const tbody = document.getElementById('performanceTable');
+            tbody.innerHTML = performanceData.map(row => `
+                <tr>
+                    <td>${row.date}</td>
+                    <td>${row.asset}</td>
+                    <td class="${row.result === 'Win' ? 'positive' : 'negative'}">${row.result}</td>
+                    <td class="${row.return >= 0 ? 'positive' : 'negative'}">${row.return >= 0 ? '+' : ''}${row.return}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStrategyCards() {
+            const container = document.getElementById('strategyCards');
+            container.innerHTML = strategies.slice(0, 3).map(s => `
+                <div class="card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold">${s.name}</h3>
+                        <span class="text-xs ${s.risk === 'Low' ? 'text-green-400' : s.risk === 'Medium' ? 'text-yellow-400' : 'text-red-400'}">${s.risk} Risk</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+                        <div>
+                            <p class="text-xs text-gray-400">30D Return</p>
+                            <p class="font-bold positive">+${s.return30d}%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Win Rate</p>
+                            <p class="font-bold">${s.winRate}%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Copiers</p>
+                            <p class="font-bold">${s.copiers}</p>
+                        </div>
+                    </div>
+                    <button onclick="showPage('strategy-detail')" class="btn-outline w-full text-sm">Copy This Strategy</button>
+                </div>
+            `).join('');
+        }
+
+        function renderAllStrategies() {
+            const container = document.getElementById('allStrategies');
+            container.innerHTML = strategies.map(s => `
+                <div class="card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold">${s.name}</h3>
+                        <span class="text-xs ${s.risk === 'Low' ? 'text-green-400' : s.risk === 'Medium' ? 'text-yellow-400' : 'text-red-400'}">${s.risk} Risk</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+                        <div>
+                            <p class="text-xs text-gray-400">30D Return</p>
+                            <p class="font-bold positive">+${s.return30d}%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Win Rate</p>
+                            <p class="font-bold">${s.winRate}%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Copiers</p>
+                            <p class="font-bold">${s.copiers}</p>
+                        </div>
+                    </div>
+                    <button onclick="showPage('strategy-detail')" class="btn-outline w-full text-sm">Copy This Strategy</button>
+                </div>
+            `).join('');
+        }
+
+        function renderStrategyDetail() {
+            const strategy = strategies[0];
+            document.getElementById('detailName').textContent = strategy.name;
+            document.getElementById('detailReturn').textContent = `+${strategy.return30d}%`;
+            document.getElementById('detailWinRate').textContent = `${strategy.winRate}%`;
+            document.getElementById('detailDD').textContent = '-8.2%';
+            document.getElementById('detailPnl').textContent = `+$${strategy.pnl.toLocaleString()}`;
+
+            const tbody = document.getElementById('tradesTable');
+            tbody.innerHTML = tradesData.map(trade => `
+                <tr>
+                    <td>${trade.date}</td>
+                    <td>${trade.asset}</td>
+                    <td>${trade.type}</td>
+                    <td>${trade.entry.toLocaleString()}</td>
+                    <td>${trade.exit.toLocaleString()}</td>
+                    <td class="${trade.result === 'Win' ? 'positive' : 'negative'}">${trade.result}</td>
+                    <td class="${trade.pct >= 0 ? 'positive' : 'negative'}">${trade.pct >= 0 ? '+' : ''}${trade.pct}%</td>
+                </tr>
+            `).join('');
+
+            renderEquityChart();
+        }
+
+        function renderEquityChart() {
+            const chartData = [
+                { date: 'Jan 1', value: 10000 },
+                { date: 'Jan 4', value: 10250 },
+                { date: 'Jan 5', value: 10180 },
+                { date: 'Jan 6', value: 10420 },
+                { date: 'Jan 7', value: 10650 },
+                { date: 'Jan 8', value: 10580 },
+                { date: 'Jan 9', value: 10890 },
+                { date: 'Jan 10', value: 11120 },
+                { date: 'Jan 11', value: 11050 },
+                { date: 'Jan 12', value: 11380 },
+                { date: 'Jan 13', value: 11650 },
+                { date: 'Jan 14', value: 11580 },
+                { date: 'Jan 15', value: 11920 }
+            ];
+
+            const svgNS = "http://www.w3.org/2000/svg";
+            const container = document.getElementById('equityChart');
+            const width = container.clientWidth;
+            const height = 300;
+            const padding = 40;
+
+            const maxValue = Math.max(...chartData.map(d => d.value));
+            const minValue = Math.min(...chartData.map(d => d.value));
+            const range = maxValue - minValue;
+
+            const points = chartData.map((d, i) => {
+                const x = padding + (i / (chartData.length - 1)) * (width - 2 * padding);
+                const y = height - padding - ((d.value - minValue) / range) * (height - 2 * padding);
+                return `${x},${y}`;
+            }).join(' ');
+
+            let svg = `<svg width="${width}" height="${height}" style="overflow: visible;">`;
+            
+            svg += `<defs>
+                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#00FF88;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#00FF88;stop-opacity:0" />
+                </linearGradient>
+            </defs>`;
+
+            const areaPoints = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+            svg += `<polygon points="${areaPoints}" fill="url(#chartGradient)" />`;
+            svg += `<polyline points="${points}" fill="none" stroke="#00FF88" stroke-width="2" />`;
+            
+            chartData.forEach((d, i) => {
+                const x = padding + (i / (chartData.length - 1)) * (width - 2 * padding);
+                const y = height - padding - ((d.value - minValue) / range) * (height - 2 * padding);
+                svg += `<circle cx="${x}" cy="${y}" r="4" fill="#00FF88" />`;
+                
+                if (i % 3 === 0) {
+                    svg += `<text x="${x}" y="${height - 15}" text-anchor="middle" fill="#666" font-size="12">${d.date}</text>`;
+                }
+            });
+
+            svg += `</svg>`;
+            container.innerHTML = svg;
+        }
+
+        function renderTransactionHistory() {
+            const tbody = document.getElementById('transactionHistory');
+            tbody.innerHTML = transactionHistory.map(tx => `
+                <tr>
+                    <td>${tx.date}</td>
+                    <td>${tx.type}</td>
+                    <td>$${tx.amount.toLocaleString()}</td>
+                    <td>
+                        <span class="${tx.status === 'Completed' ? 'positive' : tx.status === 'Processing' ? 'text-yellow-500' : 'negative'}">
+                            ${tx.status}
+                        </span>
+                    </td>
+                    <td class="text-gray-400">${tx.details}</td>
+                </tr>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPerformanceTable();
+            renderStrategyCards();
+            renderAllStrategies();
+            renderTransactionHistory();
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
