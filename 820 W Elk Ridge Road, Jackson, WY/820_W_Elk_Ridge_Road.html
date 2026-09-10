@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>820 W Elk Ridge Road | Ken's Community Realtors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a3c34;
+    --primary-light: #2d6a5a;
+    --accent: #c8a45a;
+    --accent-hover: #b8933f;
+    --dark: #1a1a1a;
+    --gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --cream: #faf9f6;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: var(--primary);
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: ''; position: absolute; inset: 3px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 10px 18px;
+    border-radius: 8px; transition: var(--transition);
+  }
+  .nav-links a:hover { color: var(--primary); background: var(--light-gray); }
+  .nav-cta {
+    background: var(--primary) !important; color: var(--white) !important;
+    border-radius: 8px !important; padding: 12px 24px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--dark); transition: var(--transition); border-radius: 2px; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 110px 0 20px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .breadcrumb a {
+    color: var(--gray); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span { color: var(--gray); margin: 0 8px; }
+  .breadcrumb .current { color: var(--primary); font-weight: 600; }
+
+  /* ── GALLERY ── */
+  .gallery {
+    padding: 20px 0 60px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .gallery-main {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .gallery-main img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .gallery-main:hover img { transform: scale(1.02); }
+  .gallery-badge {
+    position: absolute; top: 24px; left: 24px;
+    background: #10b981; color: white;
+    padding: 8px 18px; border-radius: 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .gallery-counter {
+    position: absolute; bottom: 24px; right: 24px;
+    background: rgba(0,0,0,0.7); color: white;
+    padding: 8px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+  }
+  .gallery-thumbs {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .gallery-thumb {
+    aspect-ratio: 16/10;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+  }
+  .gallery-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .gallery-thumb:hover img { transform: scale(1.05); }
+  .gallery-thumb.active::after {
+    content: ''; position: absolute; inset: 0;
+    border: 3px solid var(--accent);
+    border-radius: 12px;
+  }
+
+  /* ── LISTING DETAILS ── */
+  .listing-details {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 40px 100px;
+    display: grid; grid-template-columns: 2fr 1fr;
+    gap: 60px;
+  }
+  .listing-main h1 {
+    font-size: 42px; color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .listing-address {
+    font-size: 18px; color: var(--gray);
+    margin-bottom: 30px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .listing-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 30px;
+  }
+  .listing-specs {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 30px 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 40px;
+  }
+  .spec-item { text-align: center; }
+  .spec-icon { font-size: 28px; margin-bottom: 8px; }
+  .spec-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: var(--primary);
+  }
+  .spec-label {
+    font-size: 12px; color: var(--gray);
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+  }
+  .listing-description h2 {
+    font-size: 28px; color: var(--primary); margin-bottom: 20px;
+  }
+  .listing-description p {
+    font-size: 16px; color: var(--dark); line-height: 1.8; margin-bottom: 20px;
+  }
+  .listing-features {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px; margin-top: 30px;
+  }
+  .feature-item {
+    display: flex; align-items: center; gap: 12px; font-size: 15px;
+  }
+  .feature-item::before {
+    content: '✓'; color: var(--accent); font-weight: 700; font-size: 18px;
+  }
+
+  /* ── SIDEBAR ── */
+  .listing-sidebar {
+    position: sticky; top: 100px; height: fit-content;
+  }
+  .sidebar-card {
+    background: var(--cream); padding: 32px;
+    border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 24px;
+  }
+  .sidebar-card h3 { font-size: 20px; color: var(--primary); margin-bottom: 20px; }
+  .agent-info { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .agent-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    object-fit: cover; border: 3px solid var(--accent);
+  }
+  .agent-name { font-weight: 700; font-size: 16px; }
+  .agent-title { font-size: 13px; color: var(--gray); }
+  .agent-contact { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .agent-contact a {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--dark); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .agent-contact a:hover { color: var(--primary); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px 32px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    text-decoration: none; transition: var(--transition);
+    cursor: pointer; border: none; width: 100%;
+  }
+  .btn-primary { background: var(--accent); color: var(--dark); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,164,90,0.3); }
+
+  .inspection-fee {
+    background: var(--primary); color: var(--white);
+    padding: 24px; border-radius: 12px; text-align: center; margin-top: 20px;
+  }
+  .fee-label {
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); margin-bottom: 8px;
+  }
+  .fee-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700; color: var(--accent);
+  }
+  .fee-note { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+  /* ── MAP SECTION ── */
+  .map-section { background: var(--cream); padding: 100px 0; }
+  .map-container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+  .map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .map-placeholder {
+    background: var(--white); border-radius: 20px; aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow); font-size: 18px; color: var(--gray);
+  }
+  .map-info h2 { font-size: 32px; color: var(--primary); margin-bottom: 20px; }
+  .map-info p { font-size: 16px; color: var(--gray); line-height: 1.7; margin-bottom: 30px; }
+  .location-features { display: flex; flex-direction: column; gap: 16px; }
+  .location-feature { display: flex; align-items: center; gap: 14px; font-size: 15px; }
+  .location-feature-icon {
+    width: 40px; height: 40px; background: var(--white); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: var(--shadow);
+  }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--dark); color: rgba(255,255,255,0.6); padding: 80px 0 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-text { color: var(--white); }
+  .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 300px; }
+  .footer h4 {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: var(--transition); }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; flex-wrap: wrap; gap: 16px;
+    max-width: 1320px; margin: 0 auto; padding-left: 40px; padding-right: 40px;
+  }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none; transition: var(--transition); font-size: 16px;
+  }
+  .footer-social a:hover { background: var(--accent); color: var(--dark); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .listing-details { grid-template-columns: 1fr; }
+    .listing-sidebar { position: static; }
+    .map-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 80px; left: 0; right: 0;
+      background: var(--white); padding: 20px; box-shadow: var(--shadow-lg);
+    }
+    .gallery-thumbs { grid-template-columns: repeat(2, 1fr); }
+    .listing-specs { grid-template-columns: repeat(2, 1fr); }
+    .listing-features { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .gallery, .listing-details, .map-container, .footer-grid, .footer-bottom, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    .nav-inner { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#neighborhoods">Neighborhoods</a></li>
+      <li><a href="../index.html#listings">Listings</a></li>
+      <li><a href="../index.html#services">Services</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb">
+  <a href="../index.html">Home</a>
+  <span>›</span>
+  <a href="../index.html#listings">Listings</a>
+  <span>›</span>
+  <span class="current">820 W Elk Ridge Road</span>
+</div>
+
+<!-- ═══════════ GALLERY ══════════ -->
+<section class="gallery">
+  <div class="gallery-main" id="mainImage">
+    <img src="media/photo1.jpg" alt="820 W Elk Ridge Road - Main View" id="mainImg">
+    <div class="gallery-badge">Active</div>
+    <div class="gallery-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">6</span></div>
+  </div>
+  <div class="gallery-thumbs" id="galleryThumbs">
+    <div class="gallery-thumb active" data-index="0">
+      <img src="media/photo1.jpg" alt="Photo 1">
+    </div>
+    <div class="gallery-thumb" data-index="1">
+      <img src="media/photo2.jpg" alt="Photo 2">
+    </div>
+    <div class="gallery-thumb" data-index="2">
+      <img src="media/photo3.jpg" alt="Photo 3">
+    </div>
+    <div class="gallery-thumb" data-index="3">
+      <img src="media/photo4.jpg" alt="Photo 4">
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LISTING DETAILS ══════════ -->
+<section class="listing-details">
+  <div class="listing-main">
+    <h1>820 W Elk Ridge Road</h1>
+    <div class="listing-address"> Jackson, WY 83001</div>
+    <div class="listing-price">$1,250,000</div>
+    
+    <div class="listing-specs">
+      <div class="spec-item">
+        <div class="spec-icon">🛏</div>
+        <div class="spec-value">4</div>
+        <div class="spec-label">Bedrooms</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon">🚿</div>
+        <div class="spec-value">3</div>
+        <div class="spec-label">Bathrooms</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"></div>
+        <div class="spec-value">3,200</div>
+        <div class="spec-label">Sq Ft</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-icon"></div>
+        <div class="spec-value">1.2</div>
+        <div class="spec-label">Acres</div>
+      </div>
+    </div>
+
+    <div class="listing-description">
+      <h2>About This Property</h2>
+      <p>Welcome to 820 W Elk Ridge Road, a stunning mountain retreat nestled in the heart of Jackson, Wyoming. This beautifully crafted home offers the perfect blend of luxury and natural beauty, with breathtaking views of the surrounding mountains and easy access to world-class skiing, hiking, and wildlife viewing.</p>
+      <p>The open-concept living space features floor-to-ceiling windows that flood the interior with natural light, showcasing the spectacular landscape. The gourmet kitchen is equipped with high-end appliances, custom cabinetry, and a large island perfect for entertaining. The primary suite offers a private sanctuary with a spa-like bathroom and walk-in closet.</p>
+      <p>Outside, the professionally landscaped grounds provide multiple outdoor living spaces, including a covered patio, fire pit area, and mature trees that offer privacy and shade. This is mountain living at its finest.</p>
+      
+      <h2 style="margin-top: 40px;">Property Features</h2>
+      <div class="listing-features">
+        <div class="feature-item">Mountain Views</div>
+        <div class="feature-item">Open Floor Plan</div>
+        <div class="feature-item">Gourmet Kitchen</div>
+        <div class="feature-item">Primary Suite</div>
+        <div class="feature-item">Covered Patio</div>
+        <div class="feature-item">Fire Pit Area</div>
+        <div class="feature-item">2-Car Garage</div>
+        <div class="feature-item">Hardwood Floors</div>
+        <div class="feature-item">Stone Fireplace</div>
+        <div class="feature-item">Central Air</div>
+        <div class="feature-item">Landscaped Grounds</div>
+        <div class="feature-item">Close to Skiing</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="listing-sidebar">
+    <div class="sidebar-card">
+      <h3>Schedule an Inspection</h3>
+      <div class="agent-info">
+        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&q=80" alt="Ken Mitchell" class="agent-avatar">
+        <div>
+          <div class="agent-name">Ken Mitchell</div>
+          <div class="agent-title">Lead Broker</div>
+        </div>
+      </div>
+      <div class="agent-contact">
+        <a href="tel:+15551234567">📞 (555) 123-4567</a>
+        <a href="mailto:ken@kenscommunityrealtors.com">✉️ ken@kenscommunityrealtors.com</a>
+      </div>
+      <a href="bookings.html" class="btn btn-primary">Book Inspection ($400) →</a>
+      <div class="inspection-fee">
+        <div class="fee-label">Inspection Fee</div>
+        <div class="fee-amount">$400</div>
+        <div class="fee-note">Flat fee for properties over $200k</div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Property Details</h3>
+      <div style="display: flex; flex-direction: column; gap: 16px; font-size: 14px;">
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Property Type</span>
+          <span style="font-weight: 600;">Single Family</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Year Built</span>
+          <span style="font-weight: 600;">2018</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Lot Size</span>
+          <span style="font-weight: 600;">1.2 Acres</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Parking</span>
+          <span style="font-weight: 600;">2-Car Garage</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Heating</span>
+          <span style="font-weight: 600;">Forced Air</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Cooling</span>
+          <span style="font-weight: 600;">Central Air</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">Status</span>
+          <span style="font-weight: 600; color: #10b981;">Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MAP SECTION ═══════════ -->
+<section class="map-section">
+  <div class="map-container">
+    <div class="map-grid">
+      <div class="map-placeholder">
+        📍 Map View - Jackson, WY
+      </div>
+      <div class="map-info">
+        <h2>Location & Neighborhood</h2>
+        <p>Located in the prestigious Elk Ridge area of Jackson, this property offers the perfect balance of privacy and convenience. Just minutes from downtown Jackson, world-class skiing at Jackson Hole Mountain Resort, and Grand Teton National Park.</p>
+        <div class="location-features">
+          <div class="location-feature">
+            <div class="location-feature-icon">⛷️</div>
+            <div>15 min to Jackson Hole Mountain Resort</div>
+          </div>
+          <div class="location-feature">
+            <div class="location-feature-icon">🏞️</div>
+            <div>20 min to Grand Teton National Park</div>
+          </div>
+          <div class="location-feature">
+            <div class="location-feature-icon">🛍️</div>
+            <div>10 min to downtown Jackson</div>
+          </div>
+          <div class="location-feature">
+            <div class="location-feature-icon">✈️</div>
+            <div>25 min to Jackson Hole Airport</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═════════ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="../index.html" class="logo">
+        <div class="logo-icon">K</div>
+        <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+      </a>
+      <p>Helping families find their perfect home in the community they love. Trusted local expertise since 2010.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="../index.html#home">Home</a></li>
+        <li><a href="../index.html#listings">Listings</a></li>
+        <li><a href="../index.html#neighborhoods">Neighborhoods</a></li>
+        <li><a href="../index.html#about">About Ken</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <ul class="footer-links">
+        <li><a href="../buy a home.html">Buy a Home</a></li>
+        <li><a href="../sell a home.html">Sell a Home</a></li>
+        <li><a href="../property management.html">Property Management</a></li>
+        <li><a href="../market analysis.html">Market Analysis</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul class="footer-links">
+        <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+        <li><a href="mailto:ken@kenscommunityrealtors.com">ken@kenscommunityrealtors.com</a></li>
+        <li><a href="#">123 Main Street, Suite 200</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ken's Community Realtors. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">📷</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="YouTube">▶</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Gallery functionality
+  const photos = ['media/photo1.jpg', 'media/photo2.jpg', 'media/photo3.jpg', 'media/photo4.jpg', 'media/photo5.jpg', 'media/photo6.jpg'];
+  let currentPhotoIndex = 0;
+  const mainImg = document.getElementById('mainImg');
+  const currentPhotoSpan = document.getElementById('currentPhoto');
+  const totalPhotosSpan = document.getElementById('totalPhotos');
+  const thumbs = document.querySelectorAll('.gallery-thumb');
+
+  totalPhotosSpan.textContent = photos.length;
+
+  function updateMainImage(index) {
+    currentPhotoIndex = index;
+    mainImg.src = photos[index];
+    currentPhotoSpan.textContent = index + 1;
+    thumbs.forEach((thumb, i) => {
+      thumb.classList.toggle('active', i === index);
+    });
+  }
+
+  thumbs.forEach((thumb, index) => {
+    thumb.addEventListener('click', () => updateMainImage(index));
+  });
+
+  // Next/previous on main image click
+  document.getElementById('mainImage').addEventListener('click', () => {
+    currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+    updateMainImage(currentPhotoIndex);
+  });
+</script>
+</body>
+</html>
