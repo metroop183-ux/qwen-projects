@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy a Home | Ken's Community Realtors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a3c34;
+    --primary-light: #2d6a5a;
+    --accent: #c8a45a;
+    --accent-hover: #b8933f;
+    --dark: #1a1a1a;
+    --gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --cream: #faf9f6;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: var(--primary);
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: ''; position: absolute; inset: 3px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 10px 18px;
+    border-radius: 8px; transition: var(--transition);
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--primary); background: var(--light-gray); }
+  .nav-cta {
+    background: var(--primary) !important; color: var(--white) !important;
+    border-radius: 8px !important; padding: 12px 24px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--dark); transition: var(--transition); border-radius: 2px; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 110px 0 20px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .breadcrumb a {
+    color: var(--gray); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span { color: var(--gray); margin: 0 8px; }
+  .breadcrumb .current { color: var(--primary); font-weight: 600; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    position: relative;
+    padding: 60px 0 100px;
+    background: linear-gradient(135deg, #1a3c34 0%, #2d5a4a 100%);
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&q=80') center/cover;
+    opacity: 0.2;
+  }
+  .page-hero-content {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 0 40px;
+  }
+  .page-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,164,90,0.15); border: 1px solid rgba(200,164,90,0.3);
+    padding: 8px 20px; border-radius: 50px;
+    color: var(--accent); font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .page-hero-badge::before { content: '🏠'; }
+  .page-hero h1 {
+    font-size: clamp(38px, 5vw, 64px);
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 20px; max-width: 720px;
+  }
+  .page-hero h1 em { color: var(--accent); font-style: italic; }
+  .page-hero p {
+    font-size: 18px; color: rgba(255,255,255,0.8);
+    max-width: 560px; line-height: 1.7;
+  }
+
+  /* ── SECTIONS ─ */
+  section { padding: 100px 0; }
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-label::before { content: ''; width: 30px; height: 2px; background: var(--accent); }
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--primary); line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .section-subtitle {
+    font-size: 17px; color: var(--gray);
+    max-width: 600px; line-height: 1.7;
+  }
+
+  /* ── PROCESS STEPS ── */
+  .process { background: var(--cream); }
+  .process-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; margin-top: 60px;
+  }
+  .process-card {
+    background: var(--white);
+    padding: 36px 28px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    border-top: 3px solid transparent;
+  }
+  .process-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-top-color: var(--accent);
+  }
+  .process-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--accent); opacity: 0.3;
+    line-height: 1; margin-bottom: 16px;
+  }
+  .process-card h3 {
+    font-size: 20px; color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .process-card p {
+    font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .process-icon {
+    width: 52px; height: 52px;
+    background: rgba(26,60,52,0.06);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  /* ── MORTGAGE CALCULATOR ── */
+  .calculator { background: var(--white); }
+  .calc-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; margin-top: 50px;
+  }
+  .calc-form {
+    background: var(--cream);
+    padding: 40px;
+    border-radius: 20px;
+  }
+  .calc-row { margin-bottom: 24px; }
+  .calc-row label {
+    display: flex; justify-content: space-between;
+    font-size: 13px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .calc-row label .value {
+    color: var(--primary); font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 700;
+  }
+  .calc-row input[type="range"] {
+    width: 100%; height: 6px;
+    -webkit-appearance: none; appearance: none;
+    background: #e5e7eb; border-radius: 3px; outline: none;
+  }
+  .calc-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px;
+    background: var(--primary); border-radius: 50%;
+    cursor: pointer; border: 3px solid var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .calc-result {
+    background: var(--primary);
+    padding: 50px 40px;
+    border-radius: 20px;
+    color: var(--white);
+    text-align: center;
+  }
+  .calc-result-label {
+    font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,255,255,0.6);
+    margin-bottom: 16px;
+  }
+  .calc-result-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 700;
+    color: var(--accent); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .calc-result-period {
+    font-size: 14px; color: rgba(255,255,255,0.6);
+    margin-bottom: 40px;
+  }
+  .calc-breakdown {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .breakdown-item .label {
+    font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .breakdown-item .amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist { background: var(--cream); }
+  .checklist-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 50px;
+  }
+  .checklist-card {
+    background: var(--white);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+  .checklist-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .checklist-card h4 {
+    font-size: 18px; color: var(--primary);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .checklist-card ul { list-style: none; }
+  .checklist-card li {
+    padding: 10px 0; font-size: 14px; color: var(--dark);
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .checklist-card li:last-child { border-bottom: none; }
+  .checklist-card li::before {
+    content: '✓'; color: var(--accent); font-weight: 700;
+    font-size: 14px;
+  }
+
+  /* ── FEATURED LISTINGS ── */
+  .listings-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 28px; margin-top: 50px;
+  }
+  .listing-card {
+    background: var(--white); border-radius: 16px; overflow: hidden;
+    box-shadow: var(--shadow); transition: var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .listing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .listing-image {
+    position: relative; aspect-ratio: 16/10; overflow: hidden;
+  }
+  .listing-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .listing-card:hover .listing-image img { transform: scale(1.08); }
+  .listing-status {
+    position: absolute; top: 16px; left: 16px;
+    padding: 6px 14px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .status-active { background: #10b981; color: var(--white); }
+  .status-new { background: var(--primary); color: var(--white); }
+  .listing-favorite {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; font-size: 16px;
+    transition: var(--transition);
+    z-index: 2;
+  }
+  .listing-favorite:hover { background: var(--white); transform: scale(1.1); }
+  .listing-favorite.liked { color: #ef4444; }
+  .listing-details { padding: 24px; }
+  .listing-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 700; color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .listing-address {
+    font-size: 14px; color: var(--gray); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .listing-specs {
+    display: flex; gap: 16px; padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .spec { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gray); }
+  .spec strong { color: var(--dark); font-weight: 600; }
+
+  /* ── FAQ ── */
+  .faq { background: var(--white); }
+  .faq-grid {
+    display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 80px; align-items: flex-start; margin-top: 50px;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--cream);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  .faq-item.active { box-shadow: var(--shadow); }
+  .faq-question {
+    padding: 22px 28px;
+    font-size: 15px; font-weight: 600; color: var(--dark);
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: var(--transition);
+  }
+  .faq-question:hover { color: var(--primary); }
+  .faq-icon {
+    width: 28px; height: 28px; min-width: 28px;
+    background: var(--white); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--primary);
+    transition: transform 0.3s ease;
+  }
+  .faq-item.active .faq-icon { transform: rotate(45deg); background: var(--primary); color: var(--white); }
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 28px;
+    font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .faq-item.active .faq-answer {
+    max-height: 300px;
+    padding: 0 28px 22px;
+  }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80') center/cover;
+    opacity: 0.1;
+  }
+  .cta-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; padding: 0 40px; }
+  .cta-banner h2 {
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--white); margin-bottom: 20px;
+  }
+  .cta-banner p {
+    font-size: 17px; color: rgba(255,255,255,0.8);
+    margin-bottom: 36px;
+  }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 32px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    text-decoration: none; transition: var(--transition);
+    cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--accent); color: var(--dark); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,164,90,0.3); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.3); }
+  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark); color: rgba(255,255,255,0.6);
+    padding: 80px 0 30px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 60px;
+  }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-text { color: var(--white); }
+  .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 300px; }
+  .footer h4 {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 14px; transition: var(--transition);
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: var(--transition); font-size: 16px;
+  }
+  .footer-social a:hover { background: var(--accent); color: var(--dark); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─ RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .listings-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 80px; left: 0; right: 0;
+      background: var(--white); padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    .calc-grid, .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+    .process-grid { grid-template-columns: 1fr; }
+    .listings-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .container, .page-hero-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    .nav-inner { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .calc-result-amount { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+      <li><a href="index.html#listings">Listings</a></li>
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb">
+  <a href="index.html">Home</a>
+  <span>›</span>
+  <span class="current">Buy a Home</span>
+</div>
+
+<!-- ═══════════ PAGE HERO ═══════════ -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">Buyer's Guide</div>
+    <h1>Find the Home You've Been <em>Dreaming</em> Of</h1>
+    <p>From pre-approval to keys in hand — we guide first-time and seasoned buyers through every step with confidence and clarity.</p>
+  </div>
+</section>
+
+<!-- ═══════════ PROCESS ═══════════ -->
+<section class="process">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Your Path to Homeownership</h2>
+      <p class="section-subtitle">A proven 4-step process that takes the guesswork out of buying a home.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <div class="process-number">01</div>
+        <div class="process-icon">📋</div>
+        <h3>Get Pre-Approved</h3>
+        <p>We connect you with trusted lenders to secure financing and understand your true buying power before you start searching.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">02</div>
+        <div class="process-icon">🔍</div>
+        <h3>Discover Properties</h3>
+        <p>Using your criteria, we curate a personalized list of homes — including off-market opportunities only our network provides.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">03</div>
+        <div class="process-icon">🤝</div>
+        <h3>Make an Offer</h3>
+        <p>With market data and negotiation expertise, we craft a competitive offer that protects your interests and wins the deal.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">04</div>
+        <div class="process-icon">🔑</div>
+        <h3>Close & Celebrate</h3>
+        <p>We handle inspections, paperwork, and closing details so you can focus on the excitement of moving into your new home.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MORTGAGE CALCULATOR ═══════════ -->
+<section class="calculator">
+  <div class="container">
+    <div class="calc-grid">
+      <div class="reveal">
+        <div class="section-label">Tools</div>
+        <h2 class="section-title">Mortgage Calculator</h2>
+        <p class="section-subtitle">Estimate your monthly payment instantly. Adjust the sliders to see how price, down payment, and interest rate affect your budget.</p>
+      </div>
+      <div class="calc-form reveal">
+        <div class="calc-row">
+          <label>Home Price <span class="value" id="priceValue">$500,000</span></label>
+          <input type="range" id="homePrice" min="100000" max="3000000" step="10000" value="500000">
+        </div>
+        <div class="calc-row">
+          <label>Down Payment <span class="value" id="downValue">$100,000 (20%)</span></label>
+          <input type="range" id="downPayment" min="0" max="475000" step="5000" value="100000">
+        </div>
+        <div class="calc-row">
+          <label>Interest Rate <span class="value" id="rateValue">6.5%</span></label>
+          <input type="range" id="interestRate" min="2" max="12" step="0.1" value="6.5">
+        </div>
+        <div class="calc-row">
+          <label>Loan Term <span class="value" id="termValue">30 years</span></label>
+          <input type="range" id="loanTerm" min="10" max="30" step="5" value="30">
+        </div>
+      </div>
+      <div class="calc-result reveal">
+        <div class="calc-result-label">Estimated Monthly Payment</div>
+        <div class="calc-result-amount" id="monthlyPayment">$2,528</div>
+        <div class="calc-result-period">per month (principal & interest)</div>
+        <div class="calc-breakdown">
+          <div class="breakdown-item">
+            <div class="label">Loan Amount</div>
+            <div class="amount" id="loanAmount">$400,000</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="label">Total Interest</div>
+            <div class="amount" id="totalInterest">$510,193</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CHECKLIST ═════════ -->
+<section class="checklist">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Resources</div>
+      <h2 class="section-title">Buyer's Checklist</h2>
+      <p class="section-subtitle">Everything you need to prepare before, during, and after your home purchase.</p>
+    </div>
+    <div class="checklist-grid">
+      <div class="checklist-card reveal">
+        <h4> Before You Buy</h4>
+        <ul>
+          <li>Check your credit score</li>
+          <li>Save for down payment & closing</li>
+          <li>Get pre-approved for a mortgage</li>
+          <li>Define your must-have features</li>
+          <li>Research neighborhoods</li>
+        </ul>
+      </div>
+      <div class="checklist-card reveal">
+        <h4>🔍 During the Search</h4>
+        <ul>
+          <li>Attend open houses & tours</li>
+          <li>Compare properties side-by-side</li>
+          <li>Request home inspections</li>
+          <li>Review HOA rules & fees</li>
+          <li>Negotiate terms & price</li>
+        </ul>
+      </div>
+      <div class="checklist-card reveal">
+        <h4>📦 After Closing</h4>
+        <ul>
+          <li>Transfer utilities to your name</li>
+          <li>Change locks & security codes</li>
+          <li>Update your address everywhere</li>
+          <li>Schedule moving services</li>
+          <li>Plan your home improvement</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FEATURED LISTINGS ═══════════ -->
+<section>
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Featured</div>
+      <h2 class="section-title">Homes Ready for You</h2>
+      <p class="section-subtitle">A curated selection of properties perfect for buyers right now.</p>
+    </div>
+    <div class="listings-grid">
+      <a href="820 W Elk Ridge Road, Jackson, WY/820_W_Elk_Ridge_Road.html" class="listing-card reveal">
+        <div class="listing-image">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Property">
+          <span class="listing-status status-active">Active</span>
+          <button class="listing-favorite" onclick="event.preventDefault(); event.stopPropagation(); this.classList.toggle('liked')">♡</button>
+        </div>
+        <div class="listing-details">
+          <div class="listing-price">$1,250,000</div>
+          <div class="listing-address">📍 820 W Elk Ridge Road</div>
+          <div class="listing-specs">
+            <div class="spec"><strong>4</strong> Beds</div>
+            <div class="spec"><strong>3</strong> Baths</div>
+            <div class="spec"><strong>3,200</strong> sqft</div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="listing-card reveal" onclick="event.preventDefault(); alert('Listing page coming soon!');">
+        <div class="listing-image">
+          <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80" alt="Property">
+          <span class="listing-status status-new">New</span>
+          <button class="listing-favorite" onclick="event.preventDefault(); event.stopPropagation(); this.classList.toggle('liked')">♡</button>
+        </div>
+        <div class="listing-details">
+          <div class="listing-price">$875,000</div>
+          <div class="listing-address">📍 14150 Drake Drive</div>
+          <div class="listing-specs">
+            <div class="spec"><strong>3</strong> Beds</div>
+            <div class="spec"><strong>2</strong> Baths</div>
+            <div class="spec"><strong>2,400</strong> sqft</div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="listing-card reveal" onclick="event.preventDefault(); alert('Listing page coming soon!');">
+        <div class="listing-image">
+          <img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80" alt="Property">
+          <span class="listing-status status-active">Active</span>
+          <button class="listing-favorite" onclick="event.preventDefault(); event.stopPropagation(); this.classList.toggle('liked')">♡</button>
+        </div>
+        <div class="listing-details">
+          <div class="listing-price">$6,495,000</div>
+          <div class="listing-address">📍 800 W Elk Ridge Road</div>
+          <div class="listing-specs">
+            <div class="spec"><strong>6</strong> Beds</div>
+            <div class="spec"><strong>5</strong> Baths</div>
+            <div class="spec"><strong>7,200</strong> sqft</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ═══════════ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="reveal">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Questions Buyers Ask Most</h2>
+        <p class="section-subtitle">Can't find what you're looking for? Reach out to Ken directly — he responds within 24 hours.</p>
+        <a href="index.html#contact" class="btn btn-primary" style="margin-top: 30px;">Ask Ken a Question →</a>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item active">
+          <div class="faq-question">How much do I need for a down payment? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">While 20% is traditional to avoid PMI, many loan programs allow as little as 3-5% down. FHA loans require 3.5%, and VA loans offer 0% down for eligible veterans. We'll help you find the best option for your situation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How long does the home buying process take? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Typically 30-60 days from accepted offer to closing. The search phase varies — some buyers find their home in weeks, others take months. Being pre-approved and having clear criteria speeds things up significantly.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What are closing costs and how much should I expect? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Closing costs typically range from 2-5% of the purchase price and include lender fees, title insurance, appraisal, inspection, and escrow. On a $500K home, expect $10,000-$25,000 in closing costs.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Should I buy now or wait for rates to drop? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Timing the market is nearly impossible. If you find the right home and can comfortably afford it, buying now often makes sense — you can always refinance later if rates drop. We'll run the numbers with you either way.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do I need a realtor if I'm buying new construction? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Absolutely. The builder's agent represents the builder, not you. Having your own agent ensures your interests are protected, helps negotiate upgrades, and typically costs you nothing — the builder pays the commission.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA BANNER ═══════════ -->
+<section class="cta-banner">
+  <div class="cta-content">
+    <h2>Ready to Start Your Home Search?</h2>
+    <p>Let's talk about what you're looking for. No pressure, no obligation — just an honest conversation about your next chapter.</p>
+    <div class="cta-buttons">
+      <a href="index.html#contact" class="btn btn-primary">Schedule a Consultation →</a>
+      <a href="index.html#listings" class="btn btn-outline">Browse All Listings</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">K</div>
+          <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+        </a>
+        <p>Helping families find their perfect home in the community they love. Trusted local expertise since 2010.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+          <li><a href="index.html#about">About Ken</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="buy a home.html">Buy a Home</a></li>
+          <li><a href="sell a home.html">Sell a Home</a></li>
+          <li><a href="property management.html">Property Management</a></li>
+          <li><a href="market analysis.html">Market Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+          <li><a href="mailto:ken@kenscommunityrealtors.com">ken@kenscommunityrealtors.com</a></li>
+          <li><a href="#">123 Main Street, Suite 200</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ken's Community Realtors. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">📷</a>
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="YouTube">▶</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── MORTGAGE CALCULATOR ──
+  const homePrice = document.getElementById('homePrice');
+  const downPayment = document.getElementById('downPayment');
+  const interestRate = document.getElementById('interestRate');
+  const loanTerm = document.getElementById('loanTerm');
+
+  function formatCurrency(num) {
+    return '$' + Math.round(num).toLocaleString('en-US');
+  }
+
+  function calculateMortgage() {
+    const price = parseFloat(homePrice.value);
+    let down = parseFloat(downPayment.value);
+    const rate = parseFloat(interestRate.value);
+    const years = parseFloat(loanTerm.value);
+
+    // Cap down payment at 95% of price to keep loan realistic
+    const maxDown = price * 0.95;
+    if (down > maxDown) {
+      down = maxDown;
+      downPayment.value = down;
+    }
+    // Update max attribute for slider UI
+    downPayment.max = maxDown;
+
+    const loan = price - down;
+    const monthlyRate = rate / 100 / 12;
+    const numPayments = years * 12;
+
+    let monthly = 0;
+    if (loan > 0) {
+      if (monthlyRate === 0) {
+        monthly = loan / numPayments;
+      } else {
+        monthly = loan * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+      }
+    }
+
+    const totalInterest = (monthly * numPayments) - loan;
+    const downPercent = price > 0 ? ((down / price) * 100).toFixed(0) : 0;
+
+    document.getElementById('priceValue').textContent = formatCurrency(price);
+    document.getElementById('downValue').textContent = formatCurrency(down) + ' (' + downPercent + '%)';
+    document.getElementById('rateValue').textContent = rate.toFixed(1) + '%';
+    document.getElementById('termValue').textContent = years + ' years';
+    document.getElementById('monthlyPayment').textContent = formatCurrency(monthly);
+    document.getElementById('loanAmount').textContent = formatCurrency(loan);
+    document.getElementById('totalInterest').textContent = formatCurrency(Math.max(0, totalInterest));
+  }
+
+  [homePrice, downPayment, interestRate, loanTerm].forEach(input => {
+    input.addEventListener('input', calculateMortgage);
+  });
+  
+  // Initial calculation
+  calculateMortgage();
+
+  // ── FAQ ACCORDION ──
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

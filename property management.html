@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Management | Ken's Community Realtors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a3c34;
+    --primary-light: #2d6a5a;
+    --accent: #c8a45a;
+    --accent-hover: #b8933f;
+    --dark: #1a1a1a;
+    --gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --cream: #faf9f6;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: var(--primary);
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: ''; position: absolute; inset: 3px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 10px 18px;
+    border-radius: 8px; transition: var(--transition);
+  }
+  .nav-links a:hover { color: var(--primary); background: var(--light-gray); }
+  .nav-cta {
+    background: var(--primary) !important; color: var(--white) !important;
+    border-radius: 8px !important; padding: 12px 24px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--dark); transition: var(--transition); border-radius: 2px; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 110px 0 20px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .breadcrumb a {
+    color: var(--gray); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span { color: var(--gray); margin: 0 8px; }
+  .breadcrumb .current { color: var(--primary); font-weight: 600; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    position: relative;
+    padding: 60px 0 100px;
+    background: linear-gradient(135deg, #1a3c34 0%, #2d5a4a 100%);
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1920&q=80') center/cover;
+    opacity: 0.2;
+  }
+  .page-hero-content {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 0 40px;
+  }
+  .page-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,164,90,0.15); border: 1px solid rgba(200,164,90,0.3);
+    padding: 8px 20px; border-radius: 50px;
+    color: var(--accent); font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .page-hero-badge::before { content: '🏢'; }
+  .page-hero h1 {
+    font-size: clamp(38px, 5vw, 64px);
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 20px; max-width: 720px;
+  }
+  .page-hero h1 em { color: var(--accent); font-style: italic; }
+  .page-hero p {
+    font-size: 18px; color: rgba(255,255,255,0.8);
+    max-width: 560px; line-height: 1.7;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 0; }
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-label::before { content: ''; width: 30px; height: 2px; background: var(--accent); }
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--primary); line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .section-subtitle {
+    font-size: 17px; color: var(--gray);
+    max-width: 600px; line-height: 1.7;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--cream);
+    padding: 60px 0;
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 40px; max-width: 1000px; margin: 0 auto;
+  }
+  .stat-item { text-align: center; }
+  .stat-icon {
+    width: 60px; height: 60px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 16px;
+    box-shadow: var(--shadow);
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--primary); line-height: 1;
+  }
+  .stat-label {
+    font-size: 13px; color: var(--gray);
+    margin-top: 8px; letter-spacing: 1px;
+  }
+
+  /* ── SERVICES GRID ── */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 28px; margin-top: 50px;
+  }
+  .service-card {
+    background: var(--cream);
+    padding: 36px 28px;
+    border-radius: 16px;
+    transition: var(--transition);
+    border-top: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    border-top-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+  .service-card-icon {
+    width: 64px; height: 64px;
+    background: var(--white);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .service-card h3 {
+    font-size: 20px; color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .service-card p {
+    font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .service-card ul {
+    list-style: none; margin-top: 16px;
+  }
+  .service-card ul li {
+    padding: 8px 0; font-size: 13px; color: var(--dark);
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .service-card ul li:last-child { border-bottom: none; }
+  .service-card ul li::before {
+    content: '✓'; color: var(--accent); font-weight: 700;
+  }
+
+  /* ─ PRICING ── */
+  .pricing { background: var(--cream); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 28px; margin-top: 50px;
+    align-items: stretch;
+  }
+  .pricing-card {
+    background: var(--white);
+    padding: 40px 32px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .pricing-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+  .pricing-card.featured {
+    background: var(--primary);
+    color: var(--white);
+    transform: scale(1.05);
+  }
+  .pricing-card.featured:hover { transform: scale(1.05) translateY(-8px); }
+  .pricing-badge {
+    position: absolute; top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent); color: var(--dark);
+    padding: 6px 20px; border-radius: 50px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .pricing-name {
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .pricing-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--primary); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .pricing-card.featured .pricing-price { color: var(--white); }
+  .pricing-price span { font-size: 16px; font-family: 'Inter', sans-serif; font-weight: 400; }
+  .pricing-desc {
+    font-size: 14px; color: var(--gray);
+    margin-bottom: 28px; padding-bottom: 28px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .pricing-card.featured .pricing-desc {
+    color: rgba(255,255,255,0.7);
+    border-bottom-color: rgba(255,255,255,0.15);
+  }
+  .pricing-features {
+    list-style: none; margin-bottom: 32px;
+    flex-grow: 1;
+  }
+  .pricing-features li {
+    padding: 10px 0; font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .pricing-features li::before {
+    content: '✓'; color: var(--accent); font-weight: 700;
+  }
+  .pricing-btn {
+    display: block; width: 100%;
+    padding: 16px; text-align: center;
+    border-radius: 10px; font-size: 14px;
+    font-weight: 600; text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer; border: none;
+  }
+  .pricing-btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+  }
+  .pricing-btn-outline:hover {
+    background: var(--primary); color: var(--white);
+  }
+  .pricing-btn-primary {
+    background: var(--accent); color: var(--dark);
+  }
+  .pricing-btn-primary:hover {
+    background: var(--accent-hover); transform: translateY(-2px);
+  }
+
+  /* ── PROCESS ── */
+  .process { background: var(--white); }
+  .process-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; margin-top: 60px;
+  }
+  .process-card {
+    background: var(--cream);
+    padding: 36px 28px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    position: relative;
+  }
+  .process-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+  .process-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 700;
+    color: var(--accent); opacity: 0.3;
+    line-height: 1; margin-bottom: 16px;
+  }
+  .process-card h3 {
+    font-size: 20px; color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .process-card p {
+    font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .process-icon {
+    width: 52px; height: 52px;
+    background: var(--white);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── OWNER BENEFITS ── */
+  .benefits { background: var(--cream); }
+  .benefits-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center; margin-top: 50px;
+  }
+  .benefits-image {
+    border-radius: 20px; overflow: hidden; aspect-ratio: 4/3;
+  }
+  .benefits-image img { width: 100%; height: 100%; object-fit: cover; }
+  .benefit-list { display: flex; flex-direction: column; gap: 20px; }
+  .benefit-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--white); padding: 24px;
+    border-radius: 12px; box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+  .benefit-item:hover { transform: translateX(8px); }
+  .benefit-item-icon {
+    width: 48px; height: 48px; min-width: 48px;
+    background: rgba(26,60,52,0.06); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .benefit-item h4 {
+    font-family: 'Inter', sans-serif; font-size: 15px;
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .benefit-item p { font-size: 13px; color: var(--gray); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--primary); color: var(--white); }
+  .testimonials .section-label { color: var(--accent); }
+  .testimonials .section-label::before { background: var(--accent); }
+  .testimonials .section-title { color: var(--white); }
+  .testimonials .section-subtitle { color: rgba(255,255,255,0.6); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 28px; margin-top: 50px;
+  }
+  .testimonial-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 36px;
+    transition: var(--transition);
+  }
+  .testimonial-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+  .testimonial-stars { color: var(--accent); font-size: 16px; margin-bottom: 20px; letter-spacing: 2px; }
+  .testimonial-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 24px; font-style: italic; }
+  .testimonial-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .testimonial-author { font-weight: 600; font-size: 14px; }
+  .testimonial-role { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* ── FAQ ─ */
+  .faq { background: var(--white); }
+  .faq-grid {
+    display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 80px; align-items: flex-start; margin-top: 50px;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--cream);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  .faq-item.active { box-shadow: var(--shadow); }
+  .faq-question {
+    padding: 22px 28px;
+    font-size: 15px; font-weight: 600; color: var(--dark);
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: var(--transition);
+  }
+  .faq-question:hover { color: var(--primary); }
+  .faq-icon {
+    width: 28px; height: 28px; min-width: 28px;
+    background: var(--white); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--primary);
+    transition: transform 0.3s ease;
+  }
+  .faq-item.active .faq-icon { transform: rotate(45deg); background: var(--primary); color: var(--white); }
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 28px;
+    font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .faq-item.active .faq-answer {
+    max-height: 300px;
+    padding: 0 28px 22px;
+  }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1920&q=80') center/cover;
+    opacity: 0.1;
+  }
+  .cta-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; padding: 0 40px; }
+  .cta-banner h2 {
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--white); margin-bottom: 20px;
+  }
+  .cta-banner p {
+    font-size: 17px; color: rgba(255,255,255,0.8);
+    margin-bottom: 36px;
+  }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 32px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    text-decoration: none; transition: var(--transition);
+    cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--accent); color: var(--dark); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,164,90,0.3); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.3); }
+  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark); color: rgba(255,255,255,0.6);
+    padding: 80px 0 30px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 60px;
+  }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-text { color: var(--white); }
+  .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 300px; }
+  .footer h4 {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 14px; transition: var(--transition);
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: var(--transition); font-size: 16px;
+  }
+  .footer-social a:hover { background: var(--accent); color: var(--dark); }
+
+  /* ── ANIMATIONS ── */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .services-grid, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .pricing-card.featured { transform: scale(1); }
+    .pricing-card.featured:hover { transform: translateY(-8px); }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 80px; left: 0; right: 0;
+      background: var(--white); padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    .services-grid, .pricing-grid, .process-grid { grid-template-columns: 1fr; }
+    .benefits-grid, .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .container, .page-hero-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    .nav-inner { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+      <li><a href="index.html#listings">Listings</a></li>
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb">
+  <a href="index.html">Home</a>
+  <span>›</span>
+  <a href="index.html#services">Services</a>
+  <span>›</span>
+  <span class="current">Property Management</span>
+</div>
+
+<!-- ═══════════ PAGE HERO ═══════════ -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">Property Management</div>
+    <h1>Own Property. <em>We'll Handle the Rest.</em></h1>
+    <p>From tenant screening to midnight maintenance calls, our full-service property management lets you enjoy passive income without the headaches.</p>
+  </div>
+</section>
+
+<!-- ═══════════ STATS BAR ═══════════ -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-icon">🏠</div>
+        <div class="stat-number">120+</div>
+        <div class="stat-label">Properties Managed</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">📈</div>
+        <div class="stat-number">97%</div>
+        <div class="stat-label">Occupancy Rate</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-number">&lt;24h</div>
+        <div class="stat-label">Avg. Response Time</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-number">4.9</div>
+        <div class="stat-label">Owner Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SERVICES ═══════════ -->
+<section>
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">What We Do</div>
+      <h2 class="section-title">Complete Property Management Services</h2>
+      <p class="section-subtitle">Everything you need to run a profitable rental property — handled by professionals who treat your investment like their own.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-card-icon"></div>
+        <h3>Tenant Management</h3>
+        <p>Find and retain quality tenants who pay on time and treat your property with respect.</p>
+        <ul>
+          <li>Comprehensive background checks</li>
+          <li>Credit & employment verification</li>
+          <li>Lease preparation & signing</li>
+          <li>Move-in/move-out inspections</li>
+          <li>Renewal negotiations</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card-icon">💰</div>
+        <h3>Rent Collection</h3>
+        <p>Consistent, on-time rent collection with transparent reporting and direct deposits.</p>
+        <ul>
+          <li>Online payment portal</li>
+          <li>Automated late fee enforcement</li>
+          <li>Monthly owner statements</li>
+          <li>Eviction handling if needed</li>
+          <li>Security deposit management</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card-icon">🔧</div>
+        <h3>Maintenance & Repairs</h3>
+        <p>24/7 maintenance coordination with vetted, licensed contractors at competitive rates.</p>
+        <ul>
+          <li>24/7 emergency hotline</li>
+          <li>Preventive maintenance schedules</li>
+          <li>Vendor network management</li>
+          <li>Quality work inspections</li>
+          <li>Cost-effective solutions</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card-icon">📋</div>
+        <h3>Legal Compliance</h3>
+        <p>Stay compliant with ever-changing landlord-tenant laws and local regulations.</p>
+        <ul>
+          <li>Lease law compliance</li>
+          <li>Fair housing adherence</li>
+          <li>Safety code inspections</li>
+          <li>Legal documentation</li>
+          <li>Court representation</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card-icon">📊</div>
+        <h3>Financial Reporting</h3>
+        <p>Crystal-clear financials so you always know exactly how your investment is performing.</p>
+        <ul>
+          <li>Monthly income statements</li>
+          <li>Annual tax documents</li>
+          <li>Expense tracking & receipts</li>
+          <li>Budget forecasting</li>
+          <li>Owner portal access</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-card-icon">🎯</div>
+        <h3>Marketing & Leasing</h3>
+        <p>Minimize vacancy time with strategic marketing and professional listing presentation.</p>
+        <ul>
+          <li>Professional photography</li>
+          <li>Multi-platform advertising</li>
+          <li>Showing coordination</li>
+          <li>Market rate analysis</li>
+          <li>Application processing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRICING ═══════════ -->
+<section class="pricing">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, Transparent Pricing</h2>
+      <p class="section-subtitle">No hidden fees. No surprises. Choose the plan that fits your portfolio.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Essential</div>
+        <div class="pricing-price">8%<span>/month</span></div>
+        <p class="pricing-desc">Perfect for single-property owners who want hands-off management.</p>
+        <ul class="pricing-features">
+          <li>Tenant screening & placement</li>
+          <li>Lease preparation</li>
+          <li>Rent collection</li>
+          <li>Monthly financial reports</li>
+          <li>Basic maintenance coordination</li>
+          <li>Owner portal access</li>
+        </ul>
+        <a href="index.html#contact" class="pricing-btn pricing-btn-outline">Get Started</a>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price">10%<span>/month</span></div>
+        <p class="pricing-desc">Our most popular plan for owners who want complete peace of mind.</p>
+        <ul class="pricing-features">
+          <li>Everything in Essential</li>
+          <li>24/7 maintenance hotline</li>
+          <li>Quarterly property inspections</li>
+          <li>Eviction protection</li>
+          <li>Legal compliance management</li>
+          <li>Priority vendor rates</li>
+          <li>Dedicated property manager</li>
+        </ul>
+        <a href="index.html#contact" class="pricing-btn pricing-btn-primary">Get Started</a>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Portfolio</div>
+        <div class="pricing-price">Custom</div>
+        <p class="pricing-desc">For investors with 5+ properties who need tailored solutions.</p>
+        <ul class="pricing-features">
+          <li>Everything in Professional</li>
+          <li>Volume discounts</li>
+          <li>Custom reporting dashboards</li>
+          <li>Portfolio performance analysis</li>
+          <li>Acquisition consulting</li>
+          <li>Quarterly strategy meetings</li>
+          <li>Concierge-level service</li>
+        </ul>
+        <a href="index.html#contact" class="pricing-btn pricing-btn-outline">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROCESS ══════════ -->
+<section class="process">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Onboarding in 4 Simple Steps</h2>
+      <p class="section-subtitle">From first call to first rent check — we make the transition seamless.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <div class="process-number">01</div>
+        <div class="process-icon">📞</div>
+        <h3>Free Consultation</h3>
+        <p>We assess your property, discuss your goals, and provide a customized management proposal with no obligation.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">02</div>
+        <div class="process-icon">🔍</div>
+        <h3>Property Assessment</h3>
+        <p>Our team conducts a thorough inspection, recommends improvements, and sets the optimal rental rate.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">03</div>
+        <div class="process-icon"></div>
+        <h3>Sign & Transfer</h3>
+        <p>Execute the management agreement. We handle all paperwork, tenant notifications, and key transfers.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">04</div>
+        <div class="process-icon">💵</div>
+        <h3>Collect & Report</h3>
+        <p>We market, lease, collect rent, handle maintenance, and send you monthly reports. You just enjoy the income.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OWNER BENEFITS ═══════════ -->
+<section class="benefits">
+  <div class="container">
+    <div class="benefits-grid">
+      <div class="benefits-image reveal">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Property Management">
+      </div>
+      <div class="reveal">
+        <div class="section-label">Why Owners Choose Us</div>
+        <h2 class="section-title">Your Investment, Professionally Managed</h2>
+        <p class="section-subtitle" style="margin-bottom: 32px;">We treat every property like our own — because your success is our reputation.</p>
+        <div class="benefit-list">
+          <div class="benefit-item">
+            <div class="benefit-item-icon"></div>
+            <div>
+              <h4>Owner Portal Access</h4>
+              <p>24/7 access to financials, documents, and property status from any device.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-item-icon">⚡</div>
+            <div>
+              <h4>Rapid Response</h4>
+              <p>Average maintenance response time under 24 hours. Emergency calls handled immediately.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-item-icon"></div>
+            <div>
+              <h4>Maximized Returns</h4>
+              <p>Strategic pricing and low vacancy rates mean more money in your pocket every month.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-item-icon">🛡️</div>
+            <div>
+              <h4>Risk Mitigation</h4>
+              <p>Legal compliance, insurance guidance, and tenant screening protect your asset.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section class="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Owner Stories</div>
+      <h2 class="section-title">What Property Owners Say</h2>
+      <p class="section-subtitle">Hear from investors who've handed over the keys and never looked back.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I was spending 20+ hours a week managing my rental. Ken's team took over and my vacancy rate dropped from 15% to under 5%. Best decision I ever made."</p>
+        <div class="testimonial-meta">
+          <span class="testimonial-author">Jennifer Walsh</span>
+          <span class="testimonial-role">3-Property Owner</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As an out-of-state investor, I needed someone I could trust completely. Ken's team handles everything — I just check my portal and collect rent. Flawless."</p>
+        <div class="testimonial-meta">
+          <span class="testimonial-author">Marcus Reynolds</span>
+          <span class="testimonial-role">Out-of-State Investor</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The monthly reports are incredibly detailed. I finally understand exactly where every dollar goes. Their maintenance network saved me thousands on repairs."</p>
+        <div class="testimonial-meta">
+          <span class="testimonial-author">Dr. Amanda Foster</span>
+          <span class="testimonial-role">Portfolio Owner</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"They found me a tenant in 6 days at $200/month above what I was getting. The professional photos and marketing made all the difference."</p>
+        <div class="testimonial-meta">
+          <span class="testimonial-author">Tom & Lisa Bradley</span>
+          <span class="testimonial-role">First-Time Landlords</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="reveal">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Questions Owners Ask Most</h2>
+        <p class="section-subtitle">Everything you need to know before handing over the keys.</p>
+        <a href="index.html#contact" class="btn btn-primary" style="margin-top: 30px;">Schedule a Consultation →</a>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item active">
+          <div class="faq-question">How much does property management cost? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Our fees range from 8-10% of monthly rent collected, depending on the service level. There's also a one-time lease-up fee (typically one month's rent) when we place a new tenant. No hidden fees — ever.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How do you screen tenants? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">We run comprehensive background checks including credit scores, criminal history, eviction records, employment verification, and income confirmation (typically 3x rent requirement). We also contact previous landlords for references.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What happens if a tenant stops paying? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">We enforce late fees per the lease, communicate immediately, and if necessary, begin the eviction process. Our legal partners handle court filings. We keep you informed at every step and work to minimize your financial exposure.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How are maintenance requests handled? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Tenants submit requests through our online portal. Non-emergencies are addressed within 24-48 hours. Emergencies (water leaks, no heat, etc.) are handled immediately. We use our vetted vendor network for competitive pricing and quality work.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I still access my property? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Absolutely. As the owner, you have full access to your property with proper notice to tenants (typically 24-48 hours per local law). We coordinate all access to ensure tenant rights are respected.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How do I get paid? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Rent is collected via our online portal. After deducting management fees and any approved expenses, the net amount is direct-deposited to your account by the 10th of each month. Detailed statements are available in your owner portal.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA BANNER ═══════════ -->
+<section class="cta-banner">
+  <div class="cta-content">
+    <h2>Ready to Go Hands-Off?</h2>
+    <p>Get a free rental analysis and management proposal for your property. No obligation, no pressure.</p>
+    <div class="cta-buttons">
+      <a href="index.html#contact" class="btn btn-primary">Get Free Rental Analysis →</a>
+      <a href="index.html#services" class="btn btn-outline">View All Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">K</div>
+          <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+        </a>
+        <p>Helping families find their perfect home in the community they love. Trusted local expertise since 2010.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+          <li><a href="index.html#about">About Ken</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="buy a home.html">Buy a Home</a></li>
+          <li><a href="sell a home.html">Sell a Home</a></li>
+          <li><a href="property management.html">Property Management</a></li>
+          <li><a href="market analysis.html">Market Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+          <li><a href="mailto:ken@kenscommunityrealtors.com">ken@kenscommunityrealtors.com</a></li>
+          <li><a href="#">123 Main Street, Suite 200</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ken's Community Realtors. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">📷</a>
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="YouTube">▶</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── FAQ ACCORDION ──
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

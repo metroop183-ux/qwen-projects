@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Analysis | Ken's Community Realtors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a3c34;
+    --primary-light: #2d6a5a;
+    --accent: #c8a45a;
+    --accent-hover: #b8933f;
+    --dark: #1a1a1a;
+    --gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --cream: #faf9f6;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: var(--primary);
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: ''; position: absolute; inset: 3px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 10px 18px;
+    border-radius: 8px; transition: var(--transition);
+  }
+  .nav-links a:hover { color: var(--primary); background: var(--light-gray); }
+  .nav-cta {
+    background: var(--primary) !important; color: var(--white) !important;
+    border-radius: 8px !important; padding: 12px 24px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--dark); transition: var(--transition); border-radius: 2px; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 110px 0 20px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .breadcrumb a {
+    color: var(--gray); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span { color: var(--gray); margin: 0 8px; }
+  .breadcrumb .current { color: var(--primary); font-weight: 600; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    position: relative;
+    padding: 60px 0 100px;
+    background: linear-gradient(135deg, #1a3c34 0%, #2d5a4a 100%);
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80') center/cover;
+    opacity: 0.15;
+  }
+  .page-hero-content {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 0 40px;
+  }
+  .page-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,164,90,0.15); border: 1px solid rgba(200,164,90,0.3);
+    padding: 8px 20px; border-radius: 50px;
+    color: var(--accent); font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .page-hero-badge::before { content: '📊'; }
+  .page-hero h1 {
+    font-size: clamp(38px, 5vw, 64px);
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 20px; max-width: 720px;
+  }
+  .page-hero h1 em { color: var(--accent); font-style: italic; }
+  .page-hero p {
+    font-size: 18px; color: rgba(255,255,255,0.8);
+    max-width: 560px; line-height: 1.7;
+  }
+
+  /* ─ SECTIONS ── */
+  section { padding: 100px 0; }
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-label::before { content: ''; width: 30px; height: 2px; background: var(--accent); }
+  .section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--primary); line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .section-subtitle {
+    font-size: 17px; color: var(--gray);
+    max-width: 600px; line-height: 1.7;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--cream);
+    padding: 60px 0;
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 40px; max-width: 1000px; margin: 0 auto;
+  }
+  .stat-item { text-align: center; }
+  .stat-icon {
+    width: 60px; height: 60px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 16px;
+    box-shadow: var(--shadow);
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--primary); line-height: 1;
+  }
+  .stat-label {
+    font-size: 13px; color: var(--gray);
+    margin-top: 8px; letter-spacing: 1px;
+  }
+
+  /* ── MARKET SNAPSHOT ── */
+  .snapshot { background: var(--white); }
+  .snapshot-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; margin-top: 50px;
+  }
+  .snapshot-chart {
+    background: var(--cream);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+  }
+  .chart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px;
+  }
+  .chart-title { font-size: 18px; font-weight: 600; color: var(--primary); }
+  .chart-period { display: flex; gap: 8px; }
+  .chart-period button {
+    padding: 6px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid #e5e7eb; background: var(--white);
+    color: var(--gray); cursor: pointer; transition: var(--transition);
+  }
+  .chart-period button.active {
+    background: var(--primary); color: var(--white); border-color: var(--primary);
+  }
+  .chart-bars {
+    display: flex; align-items: flex-end; gap: 12px;
+    height: 200px; padding-bottom: 30px;
+    border-bottom: 2px solid #e5e7eb;
+    position: relative;
+  }
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--primary), var(--primary-light));
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transition: all 0.6s ease;
+    cursor: pointer;
+    min-height: 20px;
+  }
+  .chart-bar:hover { opacity: 0.8; transform: scaleY(1.05); transform-origin: bottom; }
+  .chart-bar .bar-value {
+    position: absolute; top: -28px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px; font-weight: 700; color: var(--primary);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .chart-bar:hover .bar-value { opacity: 1; }
+  .chart-bar .bar-label {
+    position: absolute; bottom: -28px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px; color: var(--gray);
+  }
+  .chart-legend {
+    display: flex; gap: 24px; margin-top: 40px; justify-content: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  .snapshot-content .section-subtitle { margin-bottom: 30px; }
+  .snapshot-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+  .snapshot-stat {
+    background: var(--cream); padding: 20px;
+    border-radius: 12px; border-left: 3px solid var(--accent);
+  }
+  .snapshot-stat .label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .snapshot-stat .value { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--primary); }
+  .snapshot-stat .change { font-size: 12px; margin-top: 4px; }
+  .change-up { color: #10b981; }
+  .change-down { color: #ef4444; }
+
+  /* ── WHAT'S INCLUDED ── */
+  .included { background: var(--cream); }
+  .included-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 28px; margin-top: 50px;
+  }
+  .included-card {
+    background: var(--white); padding: 36px 28px;
+    border-radius: 16px; box-shadow: var(--shadow);
+    transition: var(--transition); position: relative; overflow: hidden;
+  }
+  .included-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+  .included-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--accent); transform: scaleX(0); transition: transform 0.3s ease;
+  }
+  .included-card:hover::before { transform: scaleX(1); }
+  .included-icon {
+    width: 64px; height: 64px; background: rgba(26,60,52,0.06);
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    font-size: 32px; margin-bottom: 24px;
+  }
+  .included-card h3 { font-size: 20px; color: var(--primary); margin-bottom: 12px; }
+  .included-card p { font-size: 14px; color: var(--gray); line-height: 1.7; }
+
+  /* ── PROCESS ── */
+  .process { background: var(--white); }
+  .process-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; margin-top: 60px;
+  }
+  .process-card {
+    background: var(--cream); padding: 36px 28px;
+    border-radius: 16px; border: 2px solid transparent;
+    transition: var(--transition); position: relative;
+  }
+  .process-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+  .process-number {
+    font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700;
+    color: var(--accent); opacity: 0.3; line-height: 1; margin-bottom: 16px;
+  }
+  .process-card h3 { font-size: 20px; color: var(--primary); margin-bottom: 12px; }
+  .process-card p { font-size: 14px; color: var(--gray); line-height: 1.7; }
+  .process-icon {
+    width: 52px; height: 52px; background: var(--white);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+
+  /* ── REQUEST FORM ── */
+  .request { background: var(--cream); }
+  .request-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; margin-top: 50px;
+  }
+  .request-form {
+    background: var(--white); padding: 40px;
+    border-radius: 20px; box-shadow: var(--shadow);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--dark);
+  }
+  .form-group label .required { color: var(--accent); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 14px 18px; border: 2px solid #e5e7eb;
+    border-radius: 10px; font-size: 15px; font-family: 'Inter', sans-serif;
+    transition: var(--transition); background: var(--white); color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(26,60,52,0.08);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; padding: 18px; margin-top: 10px;
+    background: var(--primary); color: var(--white); border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; cursor: pointer; transition: var(--transition);
+  }
+  .form-submit:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,60,52,0.2); }
+
+  .request-info .section-subtitle { margin-bottom: 30px; }
+  .request-features { display: flex; flex-direction: column; gap: 16px; }
+  .request-feature { display: flex; align-items: center; gap: 14px; font-size: 15px; font-weight: 500; }
+  .request-feature-icon {
+    width: 40px; height: 40px; min-width: 40px; background: var(--white);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: var(--shadow);
+  }
+
+  /* ── SAMPLE REPORT ── */
+  .sample { background: var(--white); }
+  .sample-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; margin-top: 50px;
+  }
+  .sample-preview {
+    background: var(--cream); padding: 40px;
+    border-radius: 20px; box-shadow: var(--shadow); position: relative;
+  }
+  .sample-preview::before {
+    content: 'SAMPLE'; position: absolute; top: 20px; right: 20px;
+    background: var(--accent); color: var(--dark);
+    padding: 4px 12px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  }
+  .sample-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 20px; border-bottom: 2px solid var(--primary); margin-bottom: 24px;
+  }
+  .sample-header h4 { font-size: 16px; color: var(--primary); }
+  .sample-header .date { font-size: 13px; color: var(--gray); }
+  .sample-section { margin-bottom: 20px; }
+  .sample-section-title {
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  .sample-data { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sample-data-item { background: var(--white); padding: 12px; border-radius: 8px; }
+  .sample-data-item .label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+  .sample-data-item .value { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--primary); }
+  .sample-comps { background: var(--white); border-radius: 8px; overflow: hidden; }
+  .comp-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px;
+  }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-row.header {
+    background: var(--primary); color: var(--white);
+    font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--primary); color: var(--white); }
+  .testimonials .section-label { color: var(--accent); }
+  .testimonials .section-label::before { background: var(--accent); }
+  .testimonials .section-title { color: var(--white); }
+  .testimonials .section-subtitle { color: rgba(255,255,255,0.6); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 28px; margin-top: 50px;
+  }
+  .testimonial-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 36px; transition: var(--transition);
+  }
+  .testimonial-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+  .testimonial-stars { color: var(--accent); font-size: 16px; margin-bottom: 20px; letter-spacing: 2px; }
+  .testimonial-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 24px; font-style: italic; }
+  .testimonial-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .testimonial-author { font-weight: 600; font-size: 14px; }
+  .testimonial-role { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+  /* ─ FAQ ── */
+  .faq { background: var(--white); }
+  .faq-grid {
+    display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 80px; align-items: flex-start; margin-top: 50px;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--cream); border-radius: 12px;
+    overflow: hidden; transition: var(--transition);
+  }
+  .faq-item.active { box-shadow: var(--shadow); }
+  .faq-question {
+    padding: 22px 28px; font-size: 15px; font-weight: 600; color: var(--dark);
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    transition: var(--transition);
+  }
+  .faq-question:hover { color: var(--primary); }
+  .faq-icon {
+    width: 28px; height: 28px; min-width: 28px; background: var(--white);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--primary); transition: transform 0.3s ease;
+  }
+  .faq-item.active .faq-icon { transform: rotate(45deg); background: var(--primary); color: var(--white); }
+  .faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 28px; font-size: 14px; color: var(--gray); line-height: 1.7;
+  }
+  .faq-item.active .faq-answer { max-height: 300px; padding: 0 28px 22px; }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 80px 0; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80') center/cover;
+    opacity: 0.1;
+  }
+  .cta-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; padding: 0 40px; }
+  .cta-banner h2 { font-size: clamp(32px, 4vw, 44px); color: var(--white); margin-bottom: 20px; }
+  .cta-banner p { font-size: 17px; color: rgba(255,255,255,0.8); margin-bottom: 36px; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 32px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+    text-decoration: none; transition: var(--transition); cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--accent); color: var(--dark); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,164,90,0.3); }
+  .btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.3); }
+  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--dark); color: rgba(255,255,255,0.6); padding: 80px 0 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-text { color: var(--white); }
+  .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 300px; }
+  .footer h4 {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; transition: var(--transition); }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none; transition: var(--transition); font-size: 16px;
+  }
+  .footer-social a:hover { background: var(--accent); color: var(--dark); }
+
+  /* ── ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .included-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 80px; left: 0; right: 0;
+      background: var(--white); padding: 20px; box-shadow: var(--shadow-lg);
+    }
+    .snapshot-grid, .request-grid, .sample-grid, .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+    .included-grid, .process-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .container, .page-hero-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    .nav-inner { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .snapshot-stats { grid-template-columns: 1fr; }
+    .comp-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .comp-row.header { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+      <li><a href="index.html#listings">Listings</a></li>
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb">
+  <a href="index.html">Home</a>
+  <span>›</span>
+  <a href="index.html#services">Services</a>
+  <span>›</span>
+  <span class="current">Market Analysis</span>
+</div>
+
+<!-- ═══════════ PAGE HERO ═══════════ -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">Market Analysis</div>
+    <h1>Data-Driven Insights for <em>Smarter Decisions</em></h1>
+    <p>Whether you're buying, selling, or investing — our comprehensive market analysis gives you the competitive edge with real-time data and expert interpretation.</p>
+  </div>
+</section>
+
+<!-- ═══════════ STATS BAR ═══════════ -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-icon">📊</div>
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Analyses Completed</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-number">96%</div>
+        <div class="stat-label">Price Accuracy</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-number">48h</div>
+        <div class="stat-label">Avg. Delivery Time</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-icon">💰</div>
+        <div class="stat-number">$180M</div>
+        <div class="stat-label">Total Volume Analyzed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MARKET SNAPSHOT ══════════ -->
+<section class="snapshot">
+  <div class="container">
+    <div class="snapshot-grid">
+      <div class="snapshot-chart reveal">
+        <div class="chart-header">
+          <div class="chart-title">Median Home Prices</div>
+          <div class="chart-period">
+            <button class="active">12M</button>
+            <button>5Y</button>
+            <button>10Y</button>
+          </div>
+        </div>
+        <div class="chart-bars" id="chartBars"></div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background: var(--primary);"></div> Median Price</div>
+          <div class="legend-item"><div class="legend-dot" style="background: var(--accent);"></div> List Price</div>
+        </div>
+      </div>
+      <div class="snapshot-content reveal">
+        <div class="section-label">Live Data</div>
+        <h2 class="section-title">Current Market Snapshot</h2>
+        <p class="section-subtitle">Our analysis is powered by real-time MLS data, public records, and local market intelligence updated daily.</p>
+        <div class="snapshot-stats">
+          <div class="snapshot-stat">
+            <div class="label">Median Sale Price</div>
+            <div class="value">$685,000</div>
+            <div class="change change-up">↑ 4.2% vs last year</div>
+          </div>
+          <div class="snapshot-stat">
+            <div class="label">Avg. Days on Market</div>
+            <div class="value">32 days</div>
+            <div class="change change-down">↓ 8 days vs last year</div>
+          </div>
+          <div class="snapshot-stat">
+            <div class="label">Inventory Level</div>
+            <div class="value">2.8 months</div>
+            <div class="change change-down">↓ Seller's market</div>
+          </div>
+          <div class="snapshot-stat">
+            <div class="label">Sale-to-List Ratio</div>
+            <div class="value">98.5%</div>
+            <div class="change change-up">↑ Strong demand</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ WHAT'S INCLUDED ══════════ -->
+<section class="included">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Deliverables</div>
+      <h2 class="section-title">What's in Your Market Analysis</h2>
+      <p class="section-subtitle">A comprehensive report that gives you complete clarity on your property's position in the market.</p>
+    </div>
+    <div class="included-grid">
+      <div class="included-card reveal">
+        <div class="included-icon">📈</div>
+        <h3>Comparative Market Analysis</h3>
+        <p>Detailed comparison with 6-12 recently sold properties similar to yours, adjusted for differences in features, condition, and location.</p>
+      </div>
+      <div class="included-card reveal">
+        <div class="included-icon">🗺️</div>
+        <h3>Neighborhood Trends</h3>
+        <p>Hyperlocal data on price trends, inventory levels, and demand patterns specific to your neighborhood and school district.</p>
+      </div>
+      <div class="included-card reveal">
+        <div class="included-icon">💰</div>
+        <h3>Pricing Strategy</h3>
+        <p>Data-backed recommended list price with multiple scenarios showing projected days on market and negotiation room.</p>
+      </div>
+      <div class="included-card reveal">
+        <div class="included-icon">📅</div>
+        <h3>Seasonal Timing</h3>
+        <p>Analysis of the best time to list based on historical seasonal patterns and current market momentum in your area.</p>
+      </div>
+      <div class="included-card reveal">
+        <div class="included-icon">️</div>
+        <h3>Improvement ROI</h3>
+        <p>Which upgrades will actually increase your sale price and which won't provide a return on your investment.</p>
+      </div>
+      <div class="included-card reveal">
+        <div class="included-icon"></div>
+        <h3>Investment Analysis</h3>
+        <p>For investors: cap rates, cash flow projections, appreciation forecasts, and rental market analysis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROCESS ═══════════ -->
+<section class="process">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Your Analysis in 4 Steps</h2>
+      <p class="section-subtitle">From request to delivery — a streamlined process that respects your time.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <div class="process-number">01</div>
+        <div class="process-icon">📝</div>
+        <h3>Submit Request</h3>
+        <p>Fill out our simple form with your property details and what you're looking to learn.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">02</div>
+        <div class="process-icon">🔍</div>
+        <h3>Property Review</h3>
+        <p>Ken reviews your property details and may schedule a brief walkthrough for accuracy.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">03</div>
+        <div class="process-icon">📊</div>
+        <h3>Data Analysis</h3>
+        <p>We pull comps, analyze trends, and build your custom report with actionable insights.</p>
+      </div>
+      <div class="process-card reveal">
+        <div class="process-number">04</div>
+        <div class="process-icon">🎯</div>
+        <h3>Review & Discuss</h3>
+        <p>We deliver your report and schedule a call to walk through findings and answer questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SAMPLE REPORT ═══════════ -->
+<section class="sample">
+  <div class="container">
+    <div class="sample-grid">
+      <div class="sample-content reveal">
+        <div class="section-label">Preview</div>
+        <h2 class="section-title">See What You'll Receive</h2>
+        <p class="section-subtitle">Every analysis is a professionally formatted, easy-to-understand report with clear recommendations you can act on immediately.</p>
+        <div class="request-features" style="margin-top: 30px;">
+          <div class="request-feature"><div class="request-feature-icon"></div><div>15-25 page PDF report</div></div>
+          <div class="request-feature"><div class="request-feature-icon">📊</div><div>Interactive data visualizations</div></div>
+          <div class="request-feature"><div class="request-feature-icon">🎯</div><div>Clear action recommendations</div></div>
+          <div class="request-feature"><div class="request-feature-icon">📞</div><div>30-minute review call included</div></div>
+        </div>
+      </div>
+      <div class="sample-preview reveal">
+        <div class="sample-header">
+          <h4>Market Analysis Report</h4>
+          <div class="date">Sep 10, 2026</div>
+        </div>
+        <div class="sample-section">
+          <div class="sample-section-title">Property Overview</div>
+          <div class="sample-data">
+            <div class="sample-data-item"><div class="label">Address</div><div class="value" style="font-size: 14px;">820 W Elk Ridge</div></div>
+            <div class="sample-data-item"><div class="label">Property Type</div><div class="value" style="font-size: 14px;">Single Family</div></div>
+            <div class="sample-data-item"><div class="label">Bed / Bath</div><div class="value">4 / 3</div></div>
+            <div class="sample-data-item"><div class="label">Square Feet</div><div class="value">3,200</div></div>
+          </div>
+        </div>
+        <div class="sample-section">
+          <div class="sample-section-title">Comparable Sales</div>
+          <div class="sample-comps">
+            <div class="comp-row header"><div>Address</div><div>Sold Price</div><div>Sq Ft</div><div>$/Sq Ft</div></div>
+            <div class="comp-row"><div>815 Elk Ridge Rd</div><div>$1.18M</div><div>3,100</div><div>$381</div></div>
+            <div class="comp-row"><div>842 Elk Ridge Rd</div><div>$1.32M</div><div>3,400</div><div>$388</div></div>
+            <div class="comp-row"><div>790 Elk Ridge Rd</div><div>$1.15M</div><div>2,950</div><div>$390</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ REQUEST FORM ═══════════ -->
+<section class="request" id="request">
+  <div class="container">
+    <div class="request-grid">
+      <div class="request-info reveal">
+        <div class="section-label">Free Consultation</div>
+        <h2 class="section-title">Request Your Market Analysis</h2>
+        <p class="section-subtitle">Complete the form and Ken will deliver your custom analysis within 48 hours — completely free with no obligation.</p>
+        <div class="request-features">
+          <div class="request-feature"><div class="request-feature-icon">✓</div><div>100% free, no obligation</div></div>
+          <div class="request-feature"><div class="request-feature-icon">⏱️</div><div>Delivered within 48 hours</div></div>
+          <div class="request-feature"><div class="request-feature-icon">📞</div><div>Includes 30-minute review call</div></div>
+          <div class="request-feature"><div class="request-feature-icon">🔒</div><div>Your information stays private</div></div>
+        </div>
+      </div>
+      <div class="request-form reveal">
+        <div class="form-row">
+          <div class="form-group"><label>First Name <span class="required">*</span></label><input type="text" placeholder="John"></div>
+          <div class="form-group"><label>Last Name <span class="required">*</span></label><input type="text" placeholder="Doe"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email Address <span class="required">*</span></label><input type="email" placeholder="john@example.com"></div>
+          <div class="form-group"><label>Phone <span class="required">*</span></label><input type="tel" placeholder="(555) 000-0000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full"><label>Property Address <span class="required">*</span></label><input type="text" placeholder="123 Main Street, Jackson, WY"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Property Type</label>
+            <select>
+              <option>Single Family Home</option>
+              <option>Condo / Townhouse</option>
+              <option>Land / Lot</option>
+              <option>Multi-Family</option>
+              <option>Commercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Analysis Purpose</label>
+            <select>
+              <option>Considering Selling</option>
+              <option>Considering Buying</option>
+              <option>Investment Evaluation</option>
+              <option>Refinance Decision</option>
+              <option>General Curiosity</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full"><label>Additional Details</label><textarea placeholder="Tell us about your property or what you're hoping to learn..."></textarea></div>
+        </div>
+        <button class="form-submit" onclick="alert('Request submitted! Ken will contact you within 24 hours.')">Request Free Analysis →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TESTIMONIALS ═══════════ -->
+<section class="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Client Stories</div>
+      <h2 class="section-title">What Our Analysis Clients Say</h2>
+      <p class="section-subtitle">Real feedback from people who used our market analysis to make confident decisions.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Ken's analysis showed us our home was worth $80K more than we thought. We listed at his recommended price and got multiple offers within a week. Incredible accuracy."</p>
+        <div class="testimonial-meta"><span class="testimonial-author">The Patterson Family</span><span class="testimonial-role">Sellers</span></div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As an out-of-state investor, I needed reliable data before committing $2M. Ken's analysis was thorough, professional, and helped me avoid a bad deal. Worth every penny."</p>
+        <div class="testimonial-meta"><span class="testimonial-author">Richard Chen</span><span class="testimonial-role">Investor</span></div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The improvement ROI section alone saved us $30K in unnecessary renovations. Ken told us exactly what to fix and what to leave alone. Smart, honest advice."</p>
+        <div class="testimonial-meta"><span class="testimonial-author">Sarah & Mike Torres</span><span class="testimonial-role">Sellers</span></div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"We used the analysis to negotiate our purchase price down by $45K. The comps were solid and the seller's agent couldn't argue with the data. Best $0 we ever spent."</p>
+        <div class="testimonial-meta"><span class="testimonial-author">Jennifer Walsh</span><span class="testimonial-role">Buyer</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="reveal">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Questions About Market Analysis</h2>
+        <p class="section-subtitle">Everything you need to know before requesting your free analysis.</p>
+        <a href="#request" class="btn btn-primary" style="margin-top: 30px;">Request Analysis →</a>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item active">
+          <div class="faq-question">Is the market analysis really free? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Yes, 100% free with no obligation. We provide the analysis as a way to demonstrate our expertise and build trust. If you choose to work with us afterward, great. If not, you still have valuable data to make informed decisions.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How accurate is your pricing recommendation? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Our historical accuracy rate is 96% — meaning our recommended price is within 4% of the actual sale price. We use real MLS data, not automated estimates, and adjust for your property's unique features and current market conditions.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How long does it take to receive the analysis? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Standard delivery is within 48 hours of receiving your request. For urgent situations (like an offer deadline), we can often deliver within 24 hours. Rush requests are accommodated when possible.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Do I need to be planning to sell to get an analysis? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Not at all. Many clients request analyses out of curiosity, for refinance decisions, estate planning, or investment evaluation. The data is valuable regardless of your timeline or intentions.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What's the difference between this and Zillow's Zestimate? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Zestimates are automated algorithms that can be off by 10-20%. Our analysis is performed by a licensed realtor who physically reviews your property, uses actual sold comps (not listings), and provides nuanced recommendations based on current market dynamics.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I get an analysis for a property I don't own? <div class="faq-icon">+</div></div>
+          <div class="faq-answer">Yes! Buyers frequently request analyses for properties they're considering purchasing. This helps you make competitive offers and understand if the asking price is fair. Just provide the address and we'll analyze it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA BANNER ═══════════ -->
+<section class="cta-banner">
+  <div class="cta-content">
+    <h2>Ready to Make Data-Driven Decisions?</h2>
+    <p>Get your free market analysis and gain the confidence to buy, sell, or invest with clarity.</p>
+    <div class="cta-buttons">
+      <a href="#request" class="btn btn-primary">Request Free Analysis →</a>
+      <a href="index.html#services" class="btn btn-outline">View All Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">K</div>
+          <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+        </a>
+        <p>Helping families find their perfect home in the community they love. Trusted local expertise since 2010.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#listings">Listings</a></li>
+          <li><a href="index.html#neighborhoods">Neighborhoods</a></li>
+          <li><a href="index.html#about">About Ken</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="buy a home.html">Buy a Home</a></li>
+          <li><a href="sell a home.html">Sell a Home</a></li>
+          <li><a href="property management.html">Property Management</a></li>
+          <li><a href="market analysis.html">Market Analysis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+          <li><a href="mailto:ken@kenscommunityrealtors.com">ken@kenscommunityrealtors.com</a></li>
+          <li><a href="#">123 Main Street, Suite 200</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Ken's Community Realtors. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">📷</a>
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="YouTube">▶</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── CHART BARS ──
+  const chartData = [
+    { month: 'Oct', value: 620 }, { month: 'Nov', value: 615 }, { month: 'Dec', value: 625 },
+    { month: 'Jan', value: 630 }, { month: 'Feb', value: 635 }, { month: 'Mar', value: 645 },
+    { month: 'Apr', value: 655 }, { month: 'May', value: 665 }, { month: 'Jun', value: 670 },
+    { month: 'Jul', value: 675 }, { month: 'Aug', value: 680 }, { month: 'Sep', value: 685 }
+  ];
+
+  const maxVal = Math.max(...chartData.map(d => d.value));
+  const chartBars = document.getElementById('chartBars');
+
+  chartData.forEach(data => {
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    const height = (data.value / maxVal) * 100;
+    bar.style.height = height + '%';
+    bar.innerHTML = `<div class="bar-value">$${data.value}K</div><div class="bar-label">${data.month}</div>`;
+    chartBars.appendChild(bar);
+  });
+
+  // Chart period buttons
+  document.querySelectorAll('.chart-period button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.chart-period button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // ── FAQ ACCORDION ──
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    });
+  });
+
+  // Smooth scroll for same-page anchors
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
