@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Inspection - 820 W Elk Ridge Road | Ken's Community Realtors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a3c34;
+    --primary-light: #2d6a5a;
+    --accent: #c8a45a;
+    --accent-hover: #b8933f;
+    --dark: #1a1a1a;
+    --gray: #6b7280;
+    --light-gray: #f3f4f6;
+    --cream: #faf9f6;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-inner {
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 80px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: var(--primary);
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: ''; position: absolute; inset: 3px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; }
+  .logo-text span { color: var(--accent); }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--dark);
+    font-size: 13px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 10px 18px;
+    border-radius: 8px; transition: var(--transition);
+  }
+  .nav-links a:hover { color: var(--primary); background: var(--light-gray); }
+  .nav-cta {
+    background: var(--primary) !important; color: var(--white) !important;
+    border-radius: 8px !important; padding: 12px 24px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--dark); transition: var(--transition); border-radius: 2px; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 110px 0 20px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .breadcrumb a {
+    color: var(--gray); text-decoration: none; font-size: 14px;
+    transition: var(--transition);
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb span { color: var(--gray); margin: 0 8px; }
+  .breadcrumb .current { color: var(--primary); font-weight: 600; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    position: relative;
+    padding: 60px 0 80px;
+    background: linear-gradient(135deg, #1a3c34 0%, #2d5a4a 100%);
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute; inset: 0;
+    background: url('media/photo1.jpg') center/cover;
+    opacity: 0.2;
+  }
+  .page-hero-content {
+    position: relative; z-index: 2;
+    max-width: 1320px; margin: 0 auto; padding: 0 40px;
+  }
+  .page-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,164,90,0.15); border: 1px solid rgba(200,164,90,0.3);
+    padding: 8px 20px; border-radius: 50px;
+    color: var(--accent); font-size: 13px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .page-hero h1 {
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .page-hero p {
+    font-size: 18px; color: rgba(255,255,255,0.8);
+    max-width: 600px;
+  }
+
+  /* ── BOOKING SECTION ─ */
+  .booking-section {
+    padding: 80px 0;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .booking-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  .booking-info h2 {
+    font-size: 32px; color: var(--primary);
+    margin-bottom: 20px;
+  }
+  .booking-info p {
+    font-size: 16px; color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 30px;
+  }
+  .property-summary {
+    background: var(--cream);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+  }
+  .property-summary h3 {
+    font-size: 18px; color: var(--primary);
+    margin-bottom: 16px;
+  }
+  .property-summary-item {
+    display: flex; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+  }
+  .property-summary-item:last-child { border-bottom: none; }
+  .property-summary-item .label { color: var(--gray); }
+  .property-summary-item .value { font-weight: 600; }
+
+  .fee-breakdown {
+    background: var(--primary);
+    color: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+  }
+  .fee-breakdown h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--accent);
+  }
+  .fee-row {
+    display: flex; justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+  }
+  .fee-row:last-child { border-bottom: none; }
+  .fee-row.total {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 2px solid var(--accent);
+  }
+  .fee-row.total .value { color: var(--accent); font-size: 28px; }
+  .fee-structure-note {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .fee-structure-note strong {
+    color: var(--accent);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ── BOOKING FORM ── */
+  .booking-form {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+  }
+  .booking-form h2 {
+    font-size: 28px; color: var(--primary);
+    margin-bottom: 30px;
+  }
+  .form-section {
+    margin-bottom: 30px;
+  }
+  .form-section-title {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--dark);
+  }
+  .form-group label .required { color: var(--accent); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 14px 18px; border: 2px solid #e5e7eb;
+    border-radius: 10px; font-size: 15px; font-family: 'Inter', sans-serif;
+    transition: var(--transition); background: var(--white);
+    color: var(--dark);
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(26,60,52,0.08);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  /* Calendar */
+  .calendar {
+    background: var(--cream);
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .calendar-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .calendar-header h4 {
+    font-size: 18px; color: var(--primary);
+  }
+  .calendar-nav {
+    display: flex; gap: 8px;
+  }
+  .calendar-nav button {
+    width: 36px; height: 36px;
+    border: 2px solid #e5e7eb;
+    background: var(--white);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: var(--transition);
+  }
+  .calendar-nav button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .calendar-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  .calendar-day-header {
+    text-align: center;
+    font-size: 11px; font-weight: 700;
+    color: var(--gray);
+    text-transform: uppercase;
+    padding: 8px 0;
+  }
+  .calendar-day {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--white);
+  }
+  .calendar-day:hover:not(.disabled):not(.selected) {
+    background: var(--primary);
+    color: var(--white);
+  }
+  .calendar-day.disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+    background: transparent;
+  }
+  .calendar-day.selected {
+    background: var(--accent);
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .calendar-day.today {
+    border: 2px solid var(--accent);
+  }
+
+  /* Time Slots */
+  .time-slots {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .time-slot {
+    padding: 14px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--white);
+  }
+  .time-slot:hover:not(.disabled):not(.selected) {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .time-slot.selected {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+  }
+
+  /* Payment */
+  .payment-methods {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .payment-method {
+    padding: 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--white);
+  }
+  .payment-method:hover:not(.selected) {
+    border-color: var(--primary);
+  }
+  .payment-method.selected {
+    border-color: var(--accent);
+    background: rgba(200,164,90,0.05);
+  }
+  .payment-method-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .payment-method-name {
+    font-size: 13px; font-weight: 600;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 18px 32px; border-radius: 12px;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+    text-decoration: none; transition: var(--transition);
+    cursor: pointer; border: none;
+    width: 100%;
+    text-transform: uppercase;
+  }
+  .btn-primary { background: var(--accent); color: var(--dark); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(200,164,90,0.3); }
+
+  .form-note {
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 20px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark); color: rgba(255,255,255,0.6);
+    padding: 80px 0 30px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px; max-width: 1320px; margin: 0 auto;
+    padding: 0 40px;
+  }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-text { color: var(--white); }
+  .footer-brand p { font-size: 14px; line-height: 1.7; max-width: 300px; }
+  .footer h4 {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 24px;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a {
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 14px; transition: var(--transition);
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; flex-wrap: wrap; gap: 16px;
+    max-width: 1320px; margin: 0 auto;
+    padding-left: 40px; padding-right: 40px;
+  }
+  .footer-social { display: flex; gap: 12px; }
+  .footer-social a {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: var(--transition); font-size: 16px;
+  }
+  .footer-social a:hover { background: var(--accent); color: var(--dark); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .booking-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 80px; left: 0; right: 0;
+      background: var(--white); padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+    .form-row { grid-template-columns: 1fr; }
+    .time-slots { grid-template-columns: repeat(2, 1fr); }
+    .payment-methods { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .booking-section, .breadcrumb, .page-hero-content, .footer-grid, .footer-bottom { padding-left: 20px; padding-right: 20px; }
+    .nav-inner { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html#home">Home</a></li>
+      <li><a href="../index.html#neighborhoods">Neighborhoods</a></li>
+      <li><a href="../index.html#listings">Listings</a></li>
+      <li><a href="../index.html#services">Services</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ BREADCRUMB ═══════════ -->
+<div class="breadcrumb">
+  <a href="../index.html">Home</a>
+  <span>›</span>
+  <a href="../index.html#listings">Listings</a>
+  <span>›</span>
+  <a href="820_W_Elk_Ridge_Road.html">820 W Elk Ridge Road</a>
+  <span>›</span>
+  <span class="current">Book Inspection</span>
+</div>
+
+<!-- ══════════ PAGE HERO ═══════════ -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">Schedule Inspection</div>
+    <h1>820 W Elk Ridge Road</h1>
+    <p>Complete the form below to schedule your private property inspection. A small inspection fee is required to secure your appointment and ensure serious inquiries.</p>
+  </div>
+</section>
+
+<!-- ═══════════ BOOKING SECTION ═══════════ -->
+<section class="booking-section">
+  <div class="booking-grid">
+    <div class="booking-info">
+      <h2>Inspection Details</h2>
+      <p>We believe in quality over quantity. Our inspection fee ensures that we're working with serious buyers who are genuinely interested in the property. This allows us to provide you with a personalized, unhurried viewing experience where you can truly explore every aspect of the home.</p>
+      
+      <div class="property-summary">
+        <h3>Property Summary</h3>
+        <div class="property-summary-item">
+          <span class="label">Address</span>
+          <span class="value">820 W Elk Ridge Road</span>
+        </div>
+        <div class="property-summary-item">
+          <span class="label">City</span>
+          <span class="value">Jackson, WY 83001</span>
+        </div>
+        <div class="property-summary-item">
+          <span class="label">Listing Price</span>
+          <span class="value">$1,250,000</span>
+        </div>
+        <div class="property-summary-item">
+          <span class="label">Bedrooms / Bathrooms</span>
+          <span class="value">4 / 3</span>
+        </div>
+        <div class="property-summary-item">
+          <span class="label">Square Feet</span>
+          <span class="value">3,200 sq ft</span>
+        </div>
+        <div class="property-summary-item">
+          <span class="label">Lot Size</span>
+          <span class="value">1.2 Acres</span>
+        </div>
+      </div>
+
+      <div class="fee-breakdown">
+        <h3>Inspection Fee</h3>
+        <div class="fee-row">
+          <span>Listing Price</span>
+          <span>$1,250,000</span>
+        </div>
+        <div class="fee-row">
+          <span>Fee Category</span>
+          <span>Properties over $200,000</span>
+        </div>
+        <div class="fee-row total">
+          <span>Inspection Fee Due</span>
+          <span class="value">$400</span>
+        </div>
+        <div class="fee-structure-note">
+          <strong>Our Fee Structure:</strong>
+          Properties under $200,000: $200<br>
+          Properties over $200,000: $400
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-form">
+      <h2>Book Your Inspection</h2>
+      
+      <div class="form-section">
+        <div class="form-section-title">Select Date & Time</div>
+        
+        <div class="calendar">
+          <div class="calendar-header">
+            <h4 id="calendarMonth">September 2026</h4>
+            <div class="calendar-nav">
+              <button id="prevMonth">‹</button>
+              <button id="nextMonth">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <label style="font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--dark); display: block; margin-bottom: 12px;">Available Time Slots</label>
+          <div class="time-slots" id="timeSlots">
+            <div class="time-slot" data-time="9:00 AM">9:00 AM</div>
+            <div class="time-slot" data-time="10:00 AM">10:00 AM</div>
+            <div class="time-slot" data-time="11:00 AM">11:00 AM</div>
+            <div class="time-slot" data-time="1:00 PM">1:00 PM</div>
+            <div class="time-slot" data-time="2:00 PM">2:00 PM</div>
+            <div class="time-slot" data-time="3:00 PM">3:00 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Personal Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span class="required">*</span></label>
+            <input type="text" id="firstName" placeholder="John" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="required">*</span></label>
+            <input type="text" id="lastName" placeholder="Doe" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" id="email" placeholder="john@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number <span class="required">*</span></label>
+            <input type="tel" id="phone" placeholder="(555) 000-0000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pre-approval Status</label>
+            <select>
+              <option>Already pre-approved</option>
+              <option>In the process</option>
+              <option>Not yet started</option>
+              <option>Paying cash</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Represented By</label>
+            <select>
+              <option>I have a real estate agent</option>
+              <option>I'm working directly with Ken</option>
+              <option>I'm not represented yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Additional Notes or Questions</label>
+            <textarea placeholder="Tell us about your interest in this property, specific features you'd like to see, or any questions you have..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Payment Method</div>
+        <div class="payment-methods">
+          <div class="payment-method selected" data-method="card">
+            <div class="payment-method-icon">💳</div>
+            <div class="payment-method-name">Credit/Debit Card</div>
+          </div>
+          <div class="payment-method" data-method="bank">
+            <div class="payment-method-icon">🏦</div>
+            <div class="payment-method-name">Bank Transfer</div>
+          </div>
+          <div class="payment-method" data-method="check">
+            <div class="payment-method-icon">📝</div>
+            <div class="payment-method-name">Certified Check</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="submitBooking">
+        Pay $400 & Book Inspection →
+      </button>
+      <p class="form-note">🔒 Your payment is secure and encrypted. The inspection fee is non-refundable but guarantees your private, scheduled viewing with Ken.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="../index.html" class="logo">
+        <div class="logo-icon">K</div>
+        <div class="logo-text">Ken's <span>Community</span> Realtors</div>
+      </a>
+      <p>Helping families find their perfect home in the community they love. Trusted local expertise since 2010.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="../index.html#home">Home</a></li>
+        <li><a href="../index.html#listings">Listings</a></li>
+        <li><a href="../index.html#neighborhoods">Neighborhoods</a></li>
+        <li><a href="../index.html#about">About Ken</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Services</h4>
+      <ul class="footer-links">
+        <li><a href="../buy a home.html">Buy a Home</a></li>
+        <li><a href="../sell a home.html">Sell a Home</a></li>
+        <li><a href="../property management.html">Property Management</a></li>
+        <li><a href="../market analysis.html">Market Analysis</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul class="footer-links">
+        <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+        <li><a href="mailto:ken@kenscommunityrealtors.com">ken@kenscommunityrealtors.com</a></li>
+        <li><a href="#">123 Main Street, Suite 200</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ken's Community Realtors. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">📷</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="YouTube">▶</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ── CALENDAR FUNCTIONALITY ──
+  const calendarGrid = document.getElementById('calendarGrid');
+  const calendarMonth = document.getElementById('calendarMonth');
+  const prevMonthBtn = document.getElementById('prevMonth');
+  const nextMonthBtn = document.getElementById('nextMonth');
+  
+  let currentDate = new Date();
+  let currentMonth = currentDate.getMonth();
+  let currentYear = currentDate.getFullYear();
+  let selectedDate = null;
+
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  function renderCalendar() {
+    calendarGrid.innerHTML = '';
+    calendarMonth.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+    // Day headers
+    dayNames.forEach(day => {
+      const dayHeader = document.createElement('div');
+      dayHeader.className = 'calendar-day-header';
+      dayHeader.textContent = day;
+      calendarGrid.appendChild(dayHeader);
+    });
+
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today to start of day
+
+    // Empty cells for alignment
+    for (let i = 0; i < firstDay; i++) {
+      const emptyCell = document.createElement('div');
+      calendarGrid.appendChild(emptyCell);
+    }
+
+    // Day cells
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayCell = document.createElement('div');
+      dayCell.className = 'calendar-day';
+      dayCell.textContent = day;
+
+      const cellDate = new Date(currentYear, currentMonth, day);
+      const isPast = cellDate < today;
+      const isToday = cellDate.getTime() === today.getTime();
+      const isSelected = selectedDate && cellDate.getTime() === selectedDate.getTime();
+
+      if (isPast) {
+        dayCell.classList.add('disabled');
+      } else {
+        dayCell.addEventListener('click', () => selectDate(cellDate));
+      }
+
+      if (isToday) dayCell.classList.add('today');
+      if (isSelected) dayCell.classList.add('selected');
+
+      calendarGrid.appendChild(dayCell);
+    }
+  }
+
+  function selectDate(date) {
+    selectedDate = date;
+    renderCalendar();
+  }
+
+  prevMonthBtn.addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    renderCalendar();
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    renderCalendar();
+  });
+
+  renderCalendar();
+
+  // ── TIME SLOT SELECTION ──
+  const timeSlots = document.querySelectorAll('.time-slot');
+  let selectedTimeSlot = null;
+  timeSlots.forEach(slot => {
+    slot.addEventListener('click', () => {
+      timeSlots.forEach(s => s.classList.remove('selected'));
+      slot.classList.add('selected');
+      selectedTimeSlot = slot.dataset.time;
+    });
+  });
+
+  // ── PAYMENT METHOD SELECTION ──
+  const paymentMethods = document.querySelectorAll('.payment-method');
+  paymentMethods.forEach(method => {
+    method.addEventListener('click', () => {
+      paymentMethods.forEach(m => m.classList.remove('selected'));
+      method.classList.add('selected');
+    });
+  });
+
+  // ── FORM SUBMISSION ──
+  document.getElementById('submitBooking').addEventListener('click', () => {
+    if (!selectedDate) {
+      alert('Please select a date for your inspection.');
+      return;
+    }
+    
+    if (!selectedTimeSlot) {
+      alert('Please select a time slot for your inspection.');
+      return;
+    }
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!firstName || !lastName || !email || !phone) {
+      alert('Please fill in all required fields (First Name, Last Name, Email, Phone).');
+      return;
+    }
+
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    alert(`✅ Booking Confirmed!\n\nProperty: 820 W Elk Ridge Road\nDate: ${selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\nTime: ${selectedTimeSlot}\nInspection Fee: $400\n\nYou will receive a confirmation email shortly with payment instructions and property details.`);
+  });
+</script>
+</body>
+</html>
